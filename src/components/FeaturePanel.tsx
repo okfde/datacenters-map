@@ -57,7 +57,13 @@ function orderedEntries(
   }
 
   for (const [k, v] of Object.entries(attrs)) {
-    if (used.has(k) || k === "data_center_name" || k === "sources") continue;
+    if (
+      used.has(k) ||
+      k === "data_center_name" ||
+      k === "sources" ||
+      k === "protest_sources"
+    )
+      continue;
     if (FLOOR_POWER_ATTR_KEYS.has(k) || HIDDEN_ATTR_KEYS.has(k)) continue;
     if (k === "construction_status" && !showConstructionPhase) continue;
     if (isEmptyAttrDisplayValue(v)) continue;
@@ -180,6 +186,7 @@ const DataCenterDetails: Component<{ feature: DataCenterFeature }> = (props) => 
   const p = () => props.feature.properties;
   const attrs = () => p().source_attributes ?? {};
   const sources = () => parseSources(attrs().sources);
+  const protestSources = () => parseSources(attrs().protest_sources);
   const entries = () =>
     orderedEntries(
       attrs(),
@@ -206,6 +213,24 @@ const DataCenterDetails: Component<{ feature: DataCenterFeature }> = (props) => 
             <dd>
               <ul class="feature-panel__sources">
                 <For each={sources()}>
+                  {(s) => (
+                    <li>
+                      <a href={s.url} target="_blank" rel="noopener noreferrer">
+                        {s.label}
+                      </a>
+                    </li>
+                  )}
+                </For>
+              </ul>
+            </dd>
+          </div>
+        </Show>
+        <Show when={protestSources().length > 0}>
+          <div class="feature-panel__attr feature-panel__attr--sources">
+            <dt>{fieldLabelDe("protest_sources")}</dt>
+            <dd>
+              <ul class="feature-panel__sources">
+                <For each={protestSources()}>
                   {(s) => (
                     <li>
                       <a href={s.url} target="_blank" rel="noopener noreferrer">

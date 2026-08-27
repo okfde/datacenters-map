@@ -21,6 +21,7 @@ export const FIELD_LABEL_DE: Record<string, string> = {
   intended_use: "Anwendung",
   estimated_total_energy_consumption_kwh: "Prognostizierter Stromverbrauch (kWh)",
   sources: "Quellen",
+  protest_sources: "Protest-Quellen",
 };
 
 export const OPERATIONAL_STATUS_LABEL_DE: Record<string, string> = {
@@ -252,6 +253,15 @@ export function formatDbValueDe(
 
 export type ParsedSource = { label: string; url: string };
 
+function isHttpUrl(raw: string): boolean {
+  try {
+    const u = new URL(raw.trim());
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function parseSources(raw: string | undefined): ParsedSource[] {
   if (!raw?.trim()) return [];
   return raw
@@ -264,5 +274,5 @@ export function parseSources(raw: string | undefined): ParsedSource[] {
         url: part.slice(pipe + 1).trim(),
       };
     })
-    .filter((s) => s.url);
+    .filter((s) => isHttpUrl(s.url));
 }

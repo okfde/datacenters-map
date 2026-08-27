@@ -847,16 +847,17 @@ body.story-mode .feature-panel {
 }
 
 .feature-panel__protest {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
   color: var(--brand-pink);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .feature-panel__megaphone {
   display: inline-block;
-  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.15em;
+  vertical-align: -0.15em;
 }
 
 .feature-panel__sources {

@@ -27,6 +27,7 @@ import {
   ownerCountryFlag,
   shouldIncludeByOperationalCommissioning,
 } from "./mapping.js";
+import { buildProtestSourcesFromTags, serializeProtestSources } from "./lib/protest-sources.js";
 import { buildRawDataCsv } from "./raw-data-csv.js";
 
 type GeoFeature = {
@@ -196,6 +197,12 @@ function buildSourceAttributes(
     est?.estimated_total_energy_consumption_kwh ?? null,
   );
   put("sources", sourcesList(dc.sources) || null);
+  put(
+    "protest_sources",
+    serializeProtestSources(
+      buildProtestSourcesFromTags(dc.tags, dc.sources, isProtestTag),
+    ) || null,
+  );
 
   return attrs;
 }
