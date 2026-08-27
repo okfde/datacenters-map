@@ -13,6 +13,7 @@ import {
   FLOOR_POWER_ATTR_KEYS,
   formatAttrValue,
   formatDbValueDe,
+  HIDDEN_ATTR_KEYS,
   isEmptyAttrDisplayValue,
   parseSources,
   PRIMARY_ATTR_KEYS,
@@ -57,7 +58,7 @@ function orderedEntries(
 
   for (const [k, v] of Object.entries(attrs)) {
     if (used.has(k) || k === "data_center_name" || k === "sources") continue;
-    if (FLOOR_POWER_ATTR_KEYS.has(k)) continue;
+    if (FLOOR_POWER_ATTR_KEYS.has(k) || HIDDEN_ATTR_KEYS.has(k)) continue;
     if (k === "construction_status" && !showConstructionPhase) continue;
     if (isEmptyAttrDisplayValue(v)) continue;
     out.push([k, v]);

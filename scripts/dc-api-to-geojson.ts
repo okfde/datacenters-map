@@ -45,12 +45,13 @@ type GeoFeature = {
     owner_country: string | null;
     owner_country_flag: string | null;
     estimated_total_energy_consumption_kwh: number | null;
-    estimated_water_consumption_liters: number | null;
     source_attributes: Record<string, string>;
   };
 };
 
-async function listAllDataCenters(): Promise<DataCenter[]> {
+async function listDataCentersByDismissed(
+  dismissed: boolean,
+): Promise<DataCenter[]> {
   const client = createClient();
   const country = countryFilter();
   const all: DataCenter[] = [];
@@ -60,7 +61,7 @@ async function listAllDataCenters(): Promise<DataCenter[]> {
   while (hasNext) {
     const result = await client.dataCenters.list({
       country,
-      dismissed: false,
+      dismissed,
       include: ["tags", "sources"],
       page,
       per_page: 200,
@@ -70,6 +71,21 @@ async function listAllDataCenters(): Promise<DataCenter[]> {
     page += 1;
   }
   return all;
+}
+
+async function listAllDataCenters(): Promise<DataCenter[]> {
+  const [active, dismissed] = await Promise.all([
+    listDataCentersByDismissed(false),
+    listDataCentersByDismissed(true),
+  ]);
+  console.log(
+    `Fetched data centers: ${active.length} active, ${dismissed.length} dismissed`,
+  );
+  const byId = new Map<string, DataCenter>();
+  for (const dc of [...active, ...dismissed]) {
+    byId.set(dc.id, dc);
+  }
+  return [...byId.values()];
 }
 
 async function listLatestEstimations(): Promise<Map<string, DataCenterEstimation>> {
@@ -153,7 +169,6 @@ function buildSourceAttributes(
   put("operational_status", dc.operational_status);
   put("construction_status", dc.construction_status);
   put("data_center_type", dc.data_center_type);
-  put("operational_probability_percentage", dc.operational_probability_percentage);
   put("commissioning_date", dc.commissioning_date);
   put("planned_commission_date", dc.planned_commission_date);
   put("owner_type", dc.owner_type);
@@ -179,10 +194,6 @@ function buildSourceAttributes(
   put(
     "estimated_total_energy_consumption_kwh",
     est?.estimated_total_energy_consumption_kwh ?? null,
-  );
-  put(
-    "estimated_water_consumption_liters",
-    est?.estimated_water_consumption_liters ?? null,
   );
   put("sources", sourcesList(dc.sources) || null);
 
@@ -225,8 +236,6 @@ function toFeature(
       owner_country_flag: ownerCountryFlag(owner_country),
       estimated_total_energy_consumption_kwh:
         num(est?.estimated_total_energy_consumption_kwh) ?? null,
-      estimated_water_consumption_liters:
-        num(est?.estimated_water_consumption_liters) ?? null,
       source_attributes: buildSourceAttributes(dc, est),
     },
   };
@@ -241,7 +250,7 @@ async function main(): Promise<void> {
 
   const country = countryFilter();
   console.log(
-    `Exporting mappable data centers (country=${country}, data_source=${EXPORT_DATA_SOURCE}, coords required, operational commissioning ≥ ${MIN_OPERATIONAL_COMMISSIONING_YEAR})…`,
+    `Exporting mappable data centers (country=${country}, dismissed=false+true, data_source=${EXPORT_DATA_SOURCE}, coords required, operational commissioning ≥ ${MIN_OPERATIONAL_COMMISSIONING_YEAR})…`,
   );
 
   const [dcs, estimations] = await Promise.all([

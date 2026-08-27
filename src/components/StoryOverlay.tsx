@@ -54,7 +54,7 @@ const TEXT: Partial<Record<SceneId, StoryTextEntry>> = {
   },
   energyGas: {
     title: "Stromverbrauch",
-    body: "Für den Ausbau von Rechenzentren soll auch die fossile Gasinfrastruktur massiv ausgebaut werden. Blende auf der Karte die geplanten Gaskraftwerke ein: Ein Großteil des zusätzlichen Strombedarfs von Rechenzentren soll mit fossilen Brennstoffen gedeckt werden.",
+    body: "Für den Ausbau von Rechenzentren soll auch die fossile Gasinfrastruktur massiv ausgebaut werden. Blende auf der Karte alle geplanten Gaskraftwerke ein: Ein Großteil des zusätzlichen Strombedarfs von Rechenzentren soll mit fossilen Brennstoffen gedeckt werden.",
   },
   water: {
     title: "Wasserkonflikte",

@@ -10,7 +10,6 @@ export const FIELD_LABEL_DE: Record<string, string> = {
   operational_status: "Status",
   construction_status: "Bauphase",
   data_center_type: "Art des RZ",
-  operational_probability_percentage: "Wahrscheinlichkeit der Inbetriebnahme (%)",
   commissioning_date: "Inbetriebnahme",
   planned_commission_date: "Geplante Inbetriebnahme",
   owner_type: "Art des Eigentümers (UBO)",
@@ -21,7 +20,6 @@ export const FIELD_LABEL_DE: Record<string, string> = {
   estimated_total_power_capacity_kw: "Geschätzte Anschlussleistung (kW)",
   intended_use: "Anwendung",
   estimated_total_energy_consumption_kwh: "Prognostizierter Stromverbrauch (kWh)",
-  estimated_water_consumption_liters: "Prognostizierter Wasserverbrauch (l)",
   sources: "Quellen",
 };
 
@@ -93,14 +91,12 @@ export const PRIMARY_ATTR_KEYS = [
   "operational_status",
   "construction_status",
   "data_center_type",
-  "operational_probability_percentage",
   "commissioning_date",
   "planned_commission_date",
   "owner_type",
   "owner_country",
   "intended_use",
   "estimated_total_energy_consumption_kwh",
-  "estimated_water_consumption_liters",
   "sources",
 ] as const;
 
@@ -109,6 +105,12 @@ export const FLOOR_POWER_ATTR_KEYS = new Set([
   "estimated_floor_space_sqm",
   "total_power_capacity_kw",
   "estimated_total_power_capacity_kw",
+]);
+
+/** Dropped from export/UI; ignore if still present in cached GeoJSON. */
+export const HIDDEN_ATTR_KEYS = new Set([
+  "operational_probability_percentage",
+  "estimated_water_consumption_liters",
 ]);
 
 const UNKNOWN_ATTR_VALUE = "unbekannt";
@@ -123,13 +125,11 @@ export function normalizeUnknownDisplay(value: string): string {
 }
 
 const NUMERIC_ATTR_KEYS = new Set([
-  "operational_probability_percentage",
   "floor_space_sqm",
   "estimated_floor_space_sqm",
   "total_power_capacity_kw",
   "estimated_total_power_capacity_kw",
   "estimated_total_energy_consumption_kwh",
-  "estimated_water_consumption_liters",
 ]);
 
 const numberDe = new Intl.NumberFormat("de-DE");

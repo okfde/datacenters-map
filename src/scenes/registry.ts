@@ -113,7 +113,6 @@ export function buildDefaultLegendFilter(data: DataCenterCollection): LegendFilt
     enabledOwnerCountries: allKeysOn(ownerCountries),
     protestOnly: false,
     minPowerKw: null,
-    hasWaterEstimate: false,
   };
 }
 
@@ -130,7 +129,6 @@ function openFilters(
     enabledOwnerCountries: allOwnerCountries,
     protestOnly: false,
     minPowerKw: null,
-    hasWaterEstimate: false,
     ...extras,
   };
 }

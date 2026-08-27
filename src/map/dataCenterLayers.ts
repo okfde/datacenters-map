@@ -530,7 +530,6 @@ export type LegendFilter = {
   enabledOwnerCountries?: Record<string, boolean>;
   protestOnly?: boolean;
   minPowerKw?: number | null;
-  hasWaterEstimate?: boolean;
 };
 
 function coalesceKey(value: string | null | undefined): string {
@@ -560,9 +559,6 @@ function featureMatchesFilter(
   if (filter.protestOnly && !p.has_protest) return false;
   if (filter.minPowerKw != null && filter.minPowerKw > 0) {
     if ((p.size_power_kw ?? 0) < filter.minPowerKw) return false;
-  }
-  if (filter.hasWaterEstimate) {
-    if ((p.estimated_water_consumption_liters ?? 0) <= 0) return false;
   }
   return true;
 }

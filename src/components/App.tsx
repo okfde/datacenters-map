@@ -132,7 +132,6 @@ export const App: Component<AppProps> = (props) => {
       enabledOwnerCountries: defaults.enabledOwnerCountries,
       protestOnly: protestOnly(),
       minPowerKw: null,
-      hasWaterEstimate: false,
     };
   }
 

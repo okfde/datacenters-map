@@ -26,7 +26,6 @@ export type DataCenterProperties = {
   owner_country: string | null;
   owner_country_flag?: string | null;
   estimated_total_energy_consumption_kwh?: number | null;
-  estimated_water_consumption_liters?: number | null;
   source_attributes?: Record<string, string>;
 };
 
