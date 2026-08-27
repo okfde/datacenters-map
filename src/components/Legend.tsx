@@ -26,6 +26,7 @@ type LegendProps = {
   onGoToExplore: () => void;
   filtersDisabled?: boolean;
   highlightSearch?: boolean;
+  storySpotlight?: boolean;
   enabledStatus: Record<DcOperationalStatus, boolean>;
   onToggleStatus: (s: DcOperationalStatus) => void;
   sizeMetric: SizeMetric;
@@ -43,10 +44,19 @@ type LegendProps = {
 };
 
 export const Legend: Component<LegendProps> = (props) => {
-  const [collapsed, setCollapsed] = createSignal(false);
+  const startCollapsed =
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 720px)").matches;
+  const [collapsed, setCollapsed] = createSignal(startCollapsed);
+  const [toggleHint, setToggleHint] = createSignal(startCollapsed);
 
   function clearSearch(): void {
     props.onSearch("");
+  }
+
+  function onToggleClick(): void {
+    setToggleHint(false);
+    setCollapsed((c) => !c);
   }
 
   return (
@@ -55,8 +65,12 @@ export const Legend: Component<LegendProps> = (props) => {
       classList={{
         "legend--collapsed": collapsed(),
         "legend--filters-disabled": Boolean(props.filtersDisabled),
+        "legend--story-spotlight": Boolean(props.storySpotlight),
       }}
       aria-label="Legende"
+      aria-hidden={
+        props.filtersDisabled && !props.storySpotlight ? true : undefined
+      }
     >
       <div class="legend__panel">
         <div class="legend__header">
@@ -115,7 +129,7 @@ export const Legend: Component<LegendProps> = (props) => {
                       </Show>
                       <span class="legend__label">
                         {s === "operational"
-                          ? "ab 2026 in Betrieb"
+                          ? "seit 2026 in Betrieb"
                           : formatDbValueDe("status", s === "unknown" ? null : s)}
                       </span>
                     </button>
@@ -345,7 +359,8 @@ export const Legend: Component<LegendProps> = (props) => {
       <button
         type="button"
         class="legend__toggle"
-        onClick={() => setCollapsed((c) => !c)}
+        classList={{ "legend__toggle--hint": toggleHint() }}
+        onClick={() => onToggleClick()}
         aria-expanded={!collapsed()}
         aria-label={collapsed() ? "Legende einblenden" : "Legende ausblenden"}
         title={collapsed() ? "Legende einblenden" : "Legende ausblenden"}

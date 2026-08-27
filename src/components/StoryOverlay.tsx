@@ -91,38 +91,67 @@ export const StoryOverlay: Component<Props> = (props) => {
     <Show when={!isExplore() && entry()}>
       {(e) => (
         <div class="story-overlay" aria-live="polite">
-          <Show when={e().title}>
-            <h1 class="story-overlay__title">{e().title}</h1>
-          </Show>
-          <p class="story-overlay__body">{storyBodyContent(e())}</p>
-          <div class="story-overlay__actions">
-            <Show when={props.canGoPrev}>
-              <button
-                type="button"
-                class="button"
-                onClick={() => props.onPrev()}
+          <header class="story-overlay__header">
+            <div class="story-overlay__heading">
+              <Show when={e().title}>
+                <h1 class="story-overlay__title">{e().title}</h1>
+              </Show>
+            </div>
+            <button
+              type="button"
+              class="story-overlay__close"
+              aria-label="Einführung beenden"
+              title="Einführung beenden"
+              onClick={() => props.onOpenExplore()}
+            >
+              <svg
+                class="story-overlay__close-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
               >
-                Zurück
-              </button>
-            </Show>
-            <Show when={props.canGoNext}>
-              <button
-                type="button"
-                class="button"
-                onClick={() => props.onNext()}
-              >
-                Weiter
-              </button>
-            </Show>
-            <Show when={props.activeSceneId === "outro"}>
-              <button
-                type="button"
-                class="button"
-                onClick={() => props.onOpenExplore()}
-              >
-                Karte interaktiv erkunden
-              </button>
-            </Show>
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </header>
+          <div class="story-overlay__content">
+            <p class="story-overlay__body">{storyBodyContent(e())}</p>
+            <div class="story-overlay__actions">
+              <Show when={props.canGoPrev}>
+                <button
+                  type="button"
+                  class="button"
+                  onClick={() => props.onPrev()}
+                >
+                  Zurück
+                </button>
+              </Show>
+              <Show when={props.canGoNext}>
+                <button
+                  type="button"
+                  class="button"
+                  onClick={() => props.onNext()}
+                >
+                  Weiter
+                </button>
+              </Show>
+              <Show when={props.activeSceneId === "outro"}>
+                <button
+                  type="button"
+                  class="button"
+                  onClick={() => props.onOpenExplore()}
+                >
+                  Karte interaktiv erkunden
+                </button>
+              </Show>
+            </div>
           </div>
         </div>
       )}

@@ -193,14 +193,14 @@ const DataCenterDetails: Component<{ feature: DataCenterFeature }> = (props) => 
       <dl class="feature-panel__attrs">
         <For each={entries()}>
           {([k, v]) => (
-            <div>
+            <div class="feature-panel__attr">
               <dt>{fieldLabelDe(k)}</dt>
               <dd>{formatAttrValue(k, v)}</dd>
             </div>
           )}
         </For>
         <Show when={sources().length > 0}>
-          <div>
+          <div class="feature-panel__attr feature-panel__attr--sources">
             <dt>{fieldLabelDe("sources")}</dt>
             <dd>
               <ul class="feature-panel__sources">
@@ -254,41 +254,47 @@ const DataCenterPanel: Component<{
 
   return (
     <aside class="feature-panel" aria-label="Details">
-      <button
-        type="button"
-        class="feature-panel__close"
-        aria-label="Schließen"
-        onClick={() => props.onClose()}
-      >
-        ×
-      </button>
-      <h2>{datacenterSiteTitle(sections())}</h2>
-      <Show when={sections().length > 1}>
-        <p class="feature-panel__meta">
-          {sections().length} Projekte an diesem Standort
-        </p>
-      </Show>
-      <For each={sections()}>
-        {(section, index) => (
-          <>
-            <Show when={sections().length > 1}>
-              <h3 class="feature-panel__section-title">
-                {datacenterSectionTitle(section)}
-              </h3>
-            </Show>
-            <DataCenterDetails feature={section} />
-            <Show when={index() < sections().length - 1}>
-              <hr class="feature-panel__divider" />
-            </Show>
-          </>
-        )}
-      </For>
+      <header class="feature-panel__header">
+        <div class="feature-panel__heading">
+          <h2 class="feature-panel__title">{datacenterSiteTitle(sections())}</h2>
+          <Show when={sections().length > 1}>
+            <p class="feature-panel__meta">
+              {sections().length} Projekte an diesem Standort
+            </p>
+          </Show>
+        </div>
+        <button
+          type="button"
+          class="feature-panel__close"
+          aria-label="Schließen"
+          onClick={() => props.onClose()}
+        >
+          ×
+        </button>
+      </header>
+      <div class="feature-panel__body">
+        <For each={sections()}>
+          {(section, index) => (
+            <section class="feature-panel__section">
+              <Show when={sections().length > 1}>
+                <h3 class="feature-panel__section-title">
+                  {datacenterSectionTitle(section)}
+                </h3>
+              </Show>
+              <DataCenterDetails feature={section} />
+              <Show when={index() < sections().length - 1}>
+                <hr class="feature-panel__divider" />
+              </Show>
+            </section>
+          )}
+        </For>
+      </div>
     </aside>
   );
 };
 
 const GasPlantRow: Component<{ label: string; children: JSX.Element }> = (p) => (
-  <div>
+  <div class="feature-panel__attr">
     <dt>{p.label}</dt>
     <dd>{p.children}</dd>
   </div>
@@ -362,37 +368,43 @@ const GasPlantPanel: Component<{
 
   return (
     <aside class="feature-panel" aria-label="Gaskraftwerk-Details" lang="de">
-      <button
-        type="button"
-        class="feature-panel__close"
-        aria-label="Schließen"
-        onClick={() => props.onClose()}
-      >
-        ×
-      </button>
-      <h2>{props.feature.properties.name}</h2>
-      <Show when={sections().length > 1}>
-        <p class="feature-panel__meta">
-          {sections().length} Projekte an diesem Standort
-        </p>
-      </Show>
-      <For each={sections()}>
-        {(section, index) => (
-          <>
-            <Show when={sections().length > 1}>
-              <h3 class="feature-panel__section-title">
-                {gasPlantSectionTitle(section)}
-              </h3>
-            </Show>
-            <dl class="feature-panel__attrs">
-              <GasPlantDetails feature={section} />
-            </dl>
-            <Show when={index() < sections().length - 1}>
-              <hr class="feature-panel__divider" />
-            </Show>
-          </>
-        )}
-      </For>
+      <header class="feature-panel__header">
+        <div class="feature-panel__heading">
+          <h2 class="feature-panel__title">{props.feature.properties.name}</h2>
+          <Show when={sections().length > 1}>
+            <p class="feature-panel__meta">
+              {sections().length} Projekte an diesem Standort
+            </p>
+          </Show>
+        </div>
+        <button
+          type="button"
+          class="feature-panel__close"
+          aria-label="Schließen"
+          onClick={() => props.onClose()}
+        >
+          ×
+        </button>
+      </header>
+      <div class="feature-panel__body">
+        <For each={sections()}>
+          {(section, index) => (
+            <section class="feature-panel__section">
+              <Show when={sections().length > 1}>
+                <h3 class="feature-panel__section-title">
+                  {gasPlantSectionTitle(section)}
+                </h3>
+              </Show>
+              <dl class="feature-panel__attrs">
+                <GasPlantDetails feature={section} />
+              </dl>
+              <Show when={index() < sections().length - 1}>
+                <hr class="feature-panel__divider" />
+              </Show>
+            </section>
+          )}
+        </For>
+      </div>
     </aside>
   );
 };

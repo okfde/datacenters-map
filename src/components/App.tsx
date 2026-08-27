@@ -96,6 +96,7 @@ export const App: Component<AppProps> = (props) => {
   const [sizeMetric, setSizeMetricState] = createSignal(initial.size);
   const [searchQ, setSearchQ] = createSignal(initial.q);
   const [highlightSearch, setHighlightSearch] = createSignal(false);
+  const [showStoryLegend, setShowStoryLegend] = createSignal(false);
   const [gasPlantsVisible, setGasPlantsVisible] = createSignal(false);
   const [gasPlantsData, setGasPlantsData] = createSignal<GasPlantCollection | null>(
     null,
@@ -115,6 +116,7 @@ export const App: Component<AppProps> = (props) => {
     setSizeMetric: setSizeMetricState,
     setSearchQ,
     setHighlightSearch,
+    setShowStoryLegend,
     setGasPlantsVisible,
     setGroundwaterVisible,
     setProtestOnly,
@@ -367,6 +369,7 @@ export const App: Component<AppProps> = (props) => {
         onGoToExplore={playback.openExplore}
         filtersDisabled={!mapInteractive()}
         highlightSearch={highlightSearch()}
+        storySpotlight={showStoryLegend()}
         enabledStatus={displayStatus()}
         onToggleStatus={(s) =>
           setEnabledStatus((cur) => {

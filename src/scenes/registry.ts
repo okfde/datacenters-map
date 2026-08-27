@@ -17,6 +17,7 @@ export type SceneDefinition = {
   sizeMetric?: SizeMetric;
   searchQ?: string;
   highlightSearch?: boolean;
+  showLegend?: boolean;
   statusCycle?: boolean;
 };
 
@@ -202,6 +203,7 @@ export function buildSceneRegistry(
       selectFeatureId: FEATURE_MASSEN,
       searchQ: "Amazon",
       highlightSearch: true,
+      showLegend: true,
       sizeMetric: "icon",
     },
     protests: {
@@ -221,6 +223,7 @@ export function buildSceneRegistry(
       overlays: { gasPlants: false, groundwater: false },
       sizeMetric: "icon",
       statusCycle: true,
+      showLegend: true,
     },
     explore: {
       camera: GERMANY_CAMERA,

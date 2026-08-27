@@ -31,6 +31,7 @@ export type StoryPlaybackDeps = {
   setSizeMetric: (metric: SizeMetric) => void;
   setSearchQ: (q: string) => void;
   setHighlightSearch: (value: boolean) => void;
+  setShowStoryLegend: (value: boolean) => void;
   setGasPlantsVisible: (value: boolean) => void;
   setGroundwaterVisible: (value: boolean) => void;
   setProtestOnly: (value: boolean) => void;
@@ -95,6 +96,7 @@ export function createStoryPlayback(deps: StoryPlaybackDeps) {
     if (def.sizeMetric) deps.setSizeMetric(def.sizeMetric);
     deps.setSearchQ(def.searchQ ?? "");
     deps.setHighlightSearch(Boolean(def.highlightSearch));
+    deps.setShowStoryLegend(Boolean(def.showLegend ?? def.highlightSearch));
 
     const ids =
       def.selectFeatureIds ??
@@ -129,6 +131,7 @@ export function createStoryPlayback(deps: StoryPlaybackDeps) {
     deps.setStoryLegendOverride(null);
     deps.setSearchQ("");
     deps.setHighlightSearch(false);
+    deps.setShowStoryLegend(false);
     deps.setHighlightIds([]);
     setLayerOpacity(deps.map, 0.85);
     deps.setGasPlantsVisible(false);
@@ -144,6 +147,7 @@ export function createStoryPlayback(deps: StoryPlaybackDeps) {
     deps.setHighlightIds([]);
     deps.setSearchQ("");
     deps.setHighlightSearch(false);
+    deps.setShowStoryLegend(false);
     deps.setActiveSceneId("intro");
     deps.setStoryLegendOverride(null);
     deps.setGasPlantsVisible(false);

@@ -1,7 +1,9 @@
 # Heiße-Luft-Karte
 
 *Map of data centers in Germany*
-(`https://okfde.github.io/datacenters-map/`);
+
+https://okfde.github.io/datacenters-map/
+
 data is exported from the [Data Center Database API](https://github.com/LeitmotivDigital/dc-db-client)
 via [`lm-dc-db-client`](https://www.npmjs.com/package/lm-dc-db-client).
 
