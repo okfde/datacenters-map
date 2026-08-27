@@ -10,14 +10,11 @@ import {
 } from "../types/data";
 import {
   fieldLabelDe,
-  FLOOR_POWER_ATTR_KEYS,
   formatAttrValue,
   formatDbValueDe,
-  HIDDEN_ATTR_KEYS,
+  groupedAttrEntries,
   isEmptyAttrDisplayValue,
   parseSources,
-  PRIMARY_ATTR_KEYS,
-  resolveFloorPowerEntries,
 } from "../i18n/labels";
 
 type FeaturePanelProps = {
@@ -27,50 +24,12 @@ type FeaturePanelProps = {
   onClose: () => void;
 };
 
-function orderedEntries(
-  attrs: Record<string, string>,
-  sizeFloorSqm: number | null | undefined,
-  sizePowerKw: number | null | undefined,
-  operationalStatus: string | null | undefined,
-): Array<[string, string]> {
-  const used = new Set<string>();
-  const out: Array<[string, string]> = [];
-  const showConstructionPhase = operationalStatus === "under_construction";
-
-  for (const key of PRIMARY_ATTR_KEYS) {
-    if (key === "sources") continue;
-    if (key === "construction_status" && !showConstructionPhase) continue;
-    if (key === "intended_use") {
-      for (const entry of resolveFloorPowerEntries(
-        attrs,
-        sizeFloorSqm,
-        sizePowerKw,
-      )) {
-        out.push(entry);
-        used.add(entry[0]);
-      }
-    }
-    const v = attrs[key];
-    if (isEmptyAttrDisplayValue(v)) continue;
-    out.push([key, v]);
-    used.add(key);
-  }
-
-  for (const [k, v] of Object.entries(attrs)) {
-    if (
-      used.has(k) ||
-      k === "data_center_name" ||
-      k === "sources" ||
-      k === "protest_sources"
-    )
-      continue;
-    if (FLOOR_POWER_ATTR_KEYS.has(k) || HIDDEN_ATTR_KEYS.has(k)) continue;
-    if (k === "construction_status" && !showConstructionPhase) continue;
-    if (isEmptyAttrDisplayValue(v)) continue;
-    out.push([k, v]);
-  }
-  return out;
-}
+const AttrRow: Component<{ attrKey: string; value: string }> = (props) => (
+  <div class="feature-panel__attr">
+    <dt>{fieldLabelDe(props.attrKey)}</dt>
+    <dd>{formatAttrValue(props.attrKey, props.value)}</dd>
+  </div>
+);
 
 function metaParts(
   status: string | null | undefined,
@@ -187,8 +146,10 @@ const DataCenterDetails: Component<{ feature: DataCenterFeature }> = (props) => 
   const attrs = () => p().source_attributes ?? {};
   const sources = () => parseSources(attrs().sources);
   const protestSources = () => parseSources(attrs().protest_sources);
-  const entries = () =>
-    orderedEntries(
+  const groupHeadingId = (groupId: string) =>
+    `attr-group-${p().id}-${groupId}`;
+  const groups = () =>
+    groupedAttrEntries(
       attrs(),
       p().size_floor_sqm,
       p().size_power_kw,
@@ -198,52 +159,88 @@ const DataCenterDetails: Component<{ feature: DataCenterFeature }> = (props) => 
   return (
     <>
       <DataCenterMeta feature={props.feature} />
-      <dl class="feature-panel__attrs">
-        <For each={entries()}>
-          {([k, v]) => (
-            <div class="feature-panel__attr">
-              <dt>{fieldLabelDe(k)}</dt>
-              <dd>{formatAttrValue(k, v)}</dd>
-            </div>
+      <div class="feature-panel__groups">
+        <For each={groups()}>
+          {(group) => (
+            <section
+              class="feature-panel__attr-group"
+              classList={{ [`feature-panel__attr-group--${group.id}`]: true }}
+              aria-labelledby={groupHeadingId(group.id)}
+            >
+              <h4
+                class="feature-panel__attr-group-title"
+                id={groupHeadingId(group.id)}
+              >
+                {group.label}
+              </h4>
+              <dl class="feature-panel__attrs">
+                <For each={group.entries}>
+                  {([k, v]) => <AttrRow attrKey={k} value={v} />}
+                </For>
+              </dl>
+            </section>
           )}
         </For>
-        <Show when={sources().length > 0}>
-          <div class="feature-panel__attr feature-panel__attr--sources">
-            <dt>{fieldLabelDe("sources")}</dt>
-            <dd>
-              <ul class="feature-panel__sources">
-                <For each={sources()}>
-                  {(s) => (
-                    <li>
-                      <a href={s.url} target="_blank" rel="noopener noreferrer">
-                        {s.label}
-                      </a>
-                    </li>
-                  )}
-                </For>
-              </ul>
-            </dd>
-          </div>
+        <Show when={sources().length > 0 || protestSources().length > 0}>
+          <section
+            class="feature-panel__attr-group feature-panel__attr-group--sources"
+            aria-labelledby={groupHeadingId("sources")}
+          >
+            <h4
+              class="feature-panel__attr-group-title"
+              id={groupHeadingId("sources")}
+            >
+              Quellen
+            </h4>
+            <dl class="feature-panel__attrs">
+              <Show when={sources().length > 0}>
+                <div class="feature-panel__attr">
+                  <dt>{fieldLabelDe("sources")}</dt>
+                  <dd>
+                    <ul class="feature-panel__sources">
+                      <For each={sources()}>
+                        {(s) => (
+                          <li>
+                            <a
+                              href={s.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {s.label}
+                            </a>
+                          </li>
+                        )}
+                      </For>
+                    </ul>
+                  </dd>
+                </div>
+              </Show>
+              <Show when={protestSources().length > 0}>
+                <div class="feature-panel__attr feature-panel__attr--protest">
+                  <dt>{fieldLabelDe("protest_sources")}</dt>
+                  <dd>
+                    <ul class="feature-panel__sources">
+                      <For each={protestSources()}>
+                        {(s) => (
+                          <li>
+                            <a
+                              href={s.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {s.label}
+                            </a>
+                          </li>
+                        )}
+                      </For>
+                    </ul>
+                  </dd>
+                </div>
+              </Show>
+            </dl>
+          </section>
         </Show>
-        <Show when={protestSources().length > 0}>
-          <div class="feature-panel__attr feature-panel__attr--sources">
-            <dt>{fieldLabelDe("protest_sources")}</dt>
-            <dd>
-              <ul class="feature-panel__sources">
-                <For each={protestSources()}>
-                  {(s) => (
-                    <li>
-                      <a href={s.url} target="_blank" rel="noopener noreferrer">
-                        {s.label}
-                      </a>
-                    </li>
-                  )}
-                </For>
-              </ul>
-            </dd>
-          </div>
-        </Show>
-      </dl>
+      </div>
     </>
   );
 };

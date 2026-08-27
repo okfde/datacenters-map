@@ -85,6 +85,8 @@ export const PRIMARY_ATTR_KEYS = [
   "operator_name",
   "owner_name",
   "guessed_owner_or_investor",
+  "owner_type",
+  "owner_country",
   "metro_region",
   "city",
   "postal_code",
@@ -94,12 +96,179 @@ export const PRIMARY_ATTR_KEYS = [
   "data_center_type",
   "commissioning_date",
   "planned_commission_date",
-  "owner_type",
-  "owner_country",
   "intended_use",
   "estimated_total_energy_consumption_kwh",
   "sources",
 ] as const;
+
+export const ATTR_GROUP_ORDER = [
+  "ownership",
+  "location",
+  "project",
+  "technical",
+  "other",
+] as const;
+
+export type AttrGroupId = (typeof ATTR_GROUP_ORDER)[number];
+
+export const ATTR_GROUP_LABEL_DE: Record<AttrGroupId, string> = {
+  ownership: "Eigentum & Betrieb",
+  location: "Standort",
+  project: "Projekt",
+  technical: "Technische Daten",
+  other: "Weitere Angaben",
+};
+
+const ATTR_KEY_TO_GROUP: Record<string, AttrGroupId> = {
+  operator_name: "ownership",
+  owner_name: "ownership",
+  guessed_owner_or_investor: "ownership",
+  owner_type: "ownership",
+  owner_country: "ownership",
+  metro_region: "location",
+  city: "location",
+  postal_code: "location",
+  address: "location",
+  operational_status: "project",
+  construction_status: "project",
+  data_center_type: "project",
+  commissioning_date: "project",
+  planned_commission_date: "project",
+  floor_space_sqm: "technical",
+  estimated_floor_space_sqm: "technical",
+  total_power_capacity_kw: "technical",
+  estimated_total_power_capacity_kw: "technical",
+  intended_use: "technical",
+  estimated_total_energy_consumption_kwh: "technical",
+};
+
+const GROUP_KEY_ORDER: Record<AttrGroupId, readonly string[]> = {
+  ownership: [
+    "operator_name",
+    "owner_name",
+    "guessed_owner_or_investor",
+    "owner_type",
+    "owner_country",
+  ],
+  location: ["metro_region", "city", "postal_code", "address"],
+  project: [
+    "operational_status",
+    "construction_status",
+    "data_center_type",
+    "commissioning_date",
+    "planned_commission_date",
+  ],
+  technical: [
+    "floor_space_sqm",
+    "estimated_floor_space_sqm",
+    "total_power_capacity_kw",
+    "estimated_total_power_capacity_kw",
+    "intended_use",
+    "estimated_total_energy_consumption_kwh",
+  ],
+  other: [],
+};
+
+export type AttrEntry = [string, string];
+
+export type AttrGroup = {
+  id: AttrGroupId;
+  label: string;
+  entries: AttrEntry[];
+};
+
+function attrGroupForKey(key: string): AttrGroupId {
+  return ATTR_KEY_TO_GROUP[key] ?? "other";
+}
+
+function sortEntriesForGroup(
+  groupId: AttrGroupId,
+  entries: AttrEntry[],
+): AttrEntry[] {
+  const order = GROUP_KEY_ORDER[groupId];
+  if (order.length === 0) {
+    return [...entries].sort(([a], [b]) => a.localeCompare(b, "de"));
+  }
+  const rank = new Map(order.map((key, index) => [key, index]));
+  return [...entries].sort(([a], [b]) => {
+    const ra = rank.get(a) ?? order.length;
+    const rb = rank.get(b) ?? order.length;
+    if (ra !== rb) return ra - rb;
+    return a.localeCompare(b, "de");
+  });
+}
+
+function collectAttrEntries(
+  attrs: Record<string, string>,
+  sizeFloorSqm: number | null | undefined,
+  sizePowerKw: number | null | undefined,
+  operationalStatus: string | null | undefined,
+): AttrEntry[] {
+  const used = new Set<string>();
+  const out: AttrEntry[] = [];
+  const showConstructionPhase = operationalStatus === "under_construction";
+
+  for (const key of PRIMARY_ATTR_KEYS) {
+    if (key === "sources") continue;
+    if (key === "construction_status" && !showConstructionPhase) continue;
+    if (key === "intended_use") {
+      for (const entry of resolveFloorPowerEntries(
+        attrs,
+        sizeFloorSqm,
+        sizePowerKw,
+      )) {
+        out.push(entry);
+        used.add(entry[0]);
+      }
+    }
+    const v = attrs[key];
+    if (isEmptyAttrDisplayValue(v)) continue;
+    out.push([key, v]);
+    used.add(key);
+  }
+
+  for (const [k, v] of Object.entries(attrs)) {
+    if (
+      used.has(k) ||
+      k === "data_center_name" ||
+      k === "sources" ||
+      k === "protest_sources"
+    )
+      continue;
+    if (FLOOR_POWER_ATTR_KEYS.has(k) || HIDDEN_ATTR_KEYS.has(k)) continue;
+    if (k === "construction_status" && !showConstructionPhase) continue;
+    if (isEmptyAttrDisplayValue(v)) continue;
+    out.push([k, v]);
+  }
+  return out;
+}
+
+export function groupedAttrEntries(
+  attrs: Record<string, string>,
+  sizeFloorSqm: number | null | undefined,
+  sizePowerKw: number | null | undefined,
+  operationalStatus: string | null | undefined,
+): AttrGroup[] {
+  const flat = collectAttrEntries(
+    attrs,
+    sizeFloorSqm,
+    sizePowerKw,
+    operationalStatus,
+  );
+  const buckets = new Map<AttrGroupId, AttrEntry[]>(
+    ATTR_GROUP_ORDER.map((id) => [id, []]),
+  );
+
+  for (const entry of flat) {
+    buckets.get(attrGroupForKey(entry[0]))!.push(entry);
+  }
+
+  return ATTR_GROUP_ORDER.flatMap((id) => {
+    const entries = sortEntriesForGroup(id, buckets.get(id)!);
+    if (entries.length === 0) return [];
+    return [{ id, label: ATTR_GROUP_LABEL_DE[id], entries }];
+  });
+}
 
 export const FLOOR_POWER_ATTR_KEYS = new Set([
   "floor_space_sqm",
