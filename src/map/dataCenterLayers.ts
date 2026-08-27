@@ -80,7 +80,7 @@ const UNCLUSTERED: maplibregl.FilterSpecification = [
 let highlightedFeatureIds: string[] = [];
 let rackIconsOutlined = false;
 let fullCollection: DataCenterCollection | null = null;
-let currentMetric: SizeMetric = "floor";
+let currentMetric: SizeMetric = "icon";
 let dcStoryLayerOpacity = 1;
 let gasOverlayDimActive = false;
 
@@ -307,7 +307,7 @@ function applyDisplayMode(map: maplibregl.Map, metric: SizeMetric): void {
 export async function addDataCentersToMap(
   map: maplibregl.Map,
   data: DataCenterCollection,
-  metric: SizeMetric = "floor",
+  metric: SizeMetric = "icon",
 ): Promise<void> {
   fullCollection = data;
   currentMetric = metric;

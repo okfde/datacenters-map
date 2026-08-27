@@ -9,7 +9,7 @@ export type UrlState = {
   scene: StorySceneId | null;
   status: string[];
   protest: boolean | null;
-  size: SizeMetric;
+  view: SizeMetric;
   q: string;
   feature: string | null;
 };
@@ -59,11 +59,12 @@ function parseProtest(raw: string | null): boolean | null {
   return null;
 }
 
-function parseSize(raw: string | null): SizeMetric {
+function parseView(raw: string | null): SizeMetric {
   const v = (raw ?? "").trim().toLowerCase();
   if (v === "power") return "power";
+  if (v === "floor" || v === "area") return "floor";
   if (v === "icon" || v === "symbols" || v === "marker") return "icon";
-  return "floor";
+  return "icon";
 }
 
 export function parseUrlState(href: string = window.location.href): UrlState {
@@ -73,7 +74,7 @@ export function parseUrlState(href: string = window.location.href): UrlState {
     scene: parseScene(sp.get("scene")),
     status: splitCsv(sp.get("status")),
     protest: parseProtest(sp.get("protest")),
-    size: parseSize(sp.get("size")),
+    view: parseView(sp.get("view") ?? sp.get("size")),
     q: (sp.get("q") ?? "").trim(),
     feature: (sp.get("feature") ?? "").trim() || null,
   };
@@ -86,7 +87,7 @@ export function serializeUrlState(state: Partial<UrlState>): string {
   if (state.status?.length) sp.set("status", state.status.join(","));
   if (state.protest === true) sp.set("protest", "1");
   if (state.protest === false) sp.set("protest", "0");
-  if (state.size && state.size !== "floor") sp.set("size", state.size);
+  if (state.view && state.view !== "icon") sp.set("view", state.view);
   if (state.q) sp.set("q", state.q);
   if (state.feature) sp.set("feature", state.feature);
   return sp.toString();

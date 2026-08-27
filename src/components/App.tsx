@@ -95,7 +95,7 @@ export const App: Component<AppProps> = (props) => {
   const [storyLegendOverride, setStoryLegendOverride] = createSignal<Partial<LegendFilter> | null>(
     null,
   );
-  const [sizeMetric, setSizeMetricState] = createSignal(initial.size);
+  const [sizeMetric, setSizeMetricState] = createSignal(initial.view);
   const [searchQ, setSearchQ] = createSignal(initial.q);
   const [highlightSearch, setHighlightSearch] = createSignal(false);
   const [showStoryLegend, setShowStoryLegend] = createSignal(false);
@@ -288,7 +288,7 @@ export const App: Component<AppProps> = (props) => {
     }
     writeUrlState({
       status: ALL_STATUS.filter((s) => enabledStatus()[s]),
-      size: sizeMetric(),
+      view: sizeMetric(),
       q: searchQ() || undefined,
       protest: protestOnly() ? true : null,
     });

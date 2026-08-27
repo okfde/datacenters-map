@@ -38,7 +38,7 @@ pnpm build
 | `scene` | `intro`, `status`, `energy`, `energyGas`, `water`, `waterStress`, `waterBaruth`, `bigtech`, `bigtechSearch`, `protests`, `protestsLayer`, `outro`, `outroFaq` | Story scene |
 | `status` | comma list | Filter `operational_status` (`unknown` = null) |
 | `protest` | `1` / `0` | Protest sites only |
-| `size` | `floor` / `power` / `icon` | Circle by area, by power, or clustered rack icons |
+| `view` | `icon` (default) / `floor` / `power` | Clustered rack icons, circle by area, or by power |
 | `q` | text | Search |
 | `feature` | UUID | Open detail panel |
 
