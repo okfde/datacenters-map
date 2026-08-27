@@ -35,7 +35,7 @@ pnpm build
 | Param | Values | Effect |
 |-------|--------|--------|
 | `start` | `cover` (default), `story` / `intro`, `explore` | Entry mode |
-| `scene` | `intro`, `status`, `energy`, `energyGas`, `water`, `waterBaruth`, `bigtech`, `bigtechSearch`, `protests`, `outro` | Story scene |
+| `scene` | `intro`, `status`, `energy`, `energyGas`, `water`, `waterStress`, `waterBaruth`, `bigtech`, `bigtechSearch`, `protests`, `protestsLayer`, `outro`, `outroFaq` | Story scene |
 | `status` | comma list | Filter `operational_status` (`unknown` = null) |
 | `protest` | `1` / `0` | Protest sites only |
 | `size` | `floor` / `power` / `icon` | Circle by area, by power, or clustered rack icons |

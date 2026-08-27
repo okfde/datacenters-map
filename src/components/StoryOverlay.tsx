@@ -58,7 +58,11 @@ const TEXT: Partial<Record<SceneId, StoryTextEntry>> = {
   },
   water: {
     title: "Wasserkonflikte",
-    body: "Die geplanten Rechenzentren sind riesige Wasserschlucker. Rund ein Drittel der großen deutschen Rechenzentren nutzt wasserintensive Verdunstungskühlung, meist aus Grundwasserreserven, die auch den Großteil unseres Trinkwassers liefern.\nSchon heute herrscht in jedem zweiten deutschen Landkreis Grundwasserstress. Blende die Ebene Grundwasserstress ein, um zu sehen, wo neue Rechenzentren die Wasserversorgung zusätzlich belasten könnten.",
+    body: "Die geplanten Rechenzentren sind riesige Wasserschlucker. Rund ein Drittel der großen deutschen Rechenzentren nutzt wasserintensive Verdunstungskühlung, meist aus Grundwasserreserven, die auch den Großteil unseres Trinkwassers liefern.",
+  },
+  waterStress: {
+    title: "Wasserkonflikte",
+    body: "Schon heute herrscht in jedem zweiten deutschen Landkreis Grundwasserstress. Blende die Ebene Grundwasserstress ein, um zu sehen, wo neue Rechenzentren die Wasserversorgung zusätzlich belasten könnten.",
   },
   waterBaruth: {
     title: "Wasserkonflikte",
@@ -74,11 +78,19 @@ const TEXT: Partial<Record<SceneId, StoryTextEntry>> = {
   },
   protests: {
     title: "Proteste",
-    body: "Rechenzentren haben starke Auswirkungen auf lokaler Ebene. Sie verbrauchen viel Strom, Wasser und Flächen und erhitzen ihre Umgebung. Versprochene Jobs bleiben oft heiße Luft: Im rumänischen Mischii entstanden statt 21 nur 10 Stellen, in der niederländischen Gemeinde Hollands Kroon statt 2.000 nur rund 530.\nDie Ebene Proteste zeigt, wo Anwohner:innen sich gegen den Bau von Rechenzentren organisieren.",
+    body: "Rechenzentren haben starke Auswirkungen auf lokaler Ebene. Sie verbrauchen viel Strom, Wasser und Flächen und erhitzen ihre Umgebung. Versprochene Jobs bleiben oft heiße Luft: Im rumänischen Mischii entstanden statt 21 nur 10 Stellen, in der niederländischen Gemeinde Hollands Kroon statt 2.000 nur rund 530.",
+  },
+  protestsLayer: {
+    title: "Proteste",
+    body: "Die Ebene Proteste zeigt, wo Anwohner:innen sich gegen den Bau von Rechenzentren organisieren.",
   },
   outro: {
     title: "Heiße Luft",
-    body: "Die Bundesregierung treibt den Ausbau von Rechenzentren massiv voran – mit schwerwiegenden Auswirkungen auf Umwelt und Gesellschaft. Bislang gibt es keine öffentlich verfügbaren Informationen darüber, wo bereits Rechenzentren geplant werden. Doch ein ausufernder Zugriff auf Ressourcen wie Strom und Wasser, eine folgenschwere Gefährdung des Klimas und gravierende lokale Auswirkungen dürfen nicht im Verborgenen geschehen. Darum machen wir den Ausbau der Rechenzentren mit unserer Karte für alle sichtbar.\nAlle Informationen zu Quellen und Methodik gibt es in den FAQ.",
+    body: "Die Bundesregierung treibt den Ausbau von Rechenzentren massiv voran – mit schwerwiegenden Auswirkungen auf Umwelt und Gesellschaft. Bislang gibt es keine öffentlich verfügbaren Informationen darüber, wo bereits Rechenzentren geplant werden.",
+  },
+  outroFaq: {
+    title: "Heiße Luft",
+    body: "Doch ein ausufernder Zugriff auf Ressourcen wie Strom und Wasser, eine folgenschwere Gefährdung des Klimas und gravierende lokale Auswirkungen dürfen nicht im Verborgenen geschehen. Darum machen wir den Ausbau der Rechenzentren mit unserer Karte für alle sichtbar.\nAlle Informationen zu Quellen und Methodik gibt es in den FAQ.",
     faqUrl: FAQ_HREF,
   },
 };
@@ -142,7 +154,7 @@ export const StoryOverlay: Component<Props> = (props) => {
                   Weiter
                 </button>
               </Show>
-              <Show when={props.activeSceneId === "outro"}>
+              <Show when={props.activeSceneId === "outroFaq"}>
                 <button
                   type="button"
                   class="button"

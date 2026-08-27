@@ -20,11 +20,14 @@ const STORY_SCENES = new Set<string>([
   "energy",
   "energyGas",
   "water",
+  "waterStress",
   "waterBaruth",
   "bigtech",
   "bigtechSearch",
   "protests",
+  "protestsLayer",
   "outro",
+  "outroFaq",
 ]);
 
 function splitCsv(raw: string | null): string[] {

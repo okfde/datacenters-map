@@ -4,11 +4,14 @@ export type SceneId =
   | "energy"
   | "energyGas"
   | "water"
+  | "waterStress"
   | "waterBaruth"
   | "bigtech"
   | "bigtechSearch"
   | "protests"
+  | "protestsLayer"
   | "outro"
+  | "outroFaq"
   | "explore";
 
 export type StorySceneId = Exclude<SceneId, "explore">;

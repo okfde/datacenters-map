@@ -27,11 +27,14 @@ export const STORY_ORDER: SceneId[] = [
   "energy",
   "energyGas",
   "water",
+  "waterStress",
   "waterBaruth",
   "bigtech",
   "bigtechSearch",
   "protests",
+  "protestsLayer",
   "outro",
+  "outroFaq",
 ];
 
 const ALL_STATUS_ON: Record<DcOperationalStatus, boolean> = {
@@ -179,6 +182,13 @@ export function buildSceneRegistry(
       overlays: { gasPlants: false, groundwater: true },
       sizeMetric: "icon",
     },
+    waterStress: {
+      camera: GERMANY_CAMERA,
+      layerOpacity: 0.9,
+      legendOverride: baseOpen,
+      overlays: { gasPlants: false, groundwater: true },
+      sizeMetric: "icon",
+    },
     waterBaruth: {
       camera: BARUTH_CAMERA,
       layerOpacity: 0.9,
@@ -207,6 +217,13 @@ export function buildSceneRegistry(
       sizeMetric: "icon",
     },
     protests: {
+      camera: MASSEN_CAMERA,
+      layerOpacity: 0.95,
+      legendOverride: baseOpen,
+      overlays: { gasPlants: false, groundwater: false },
+      sizeMetric: "icon",
+    },
+    protestsLayer: {
       camera: WESTDEUTSCHLAND_CAMERA,
       layerOpacity: 0.95,
       legendOverride: {
@@ -217,6 +234,15 @@ export function buildSceneRegistry(
       sizeMetric: "icon",
     },
     outro: {
+      camera: GERMANY_CAMERA,
+      layerOpacity: 0.85,
+      legendOverride: baseOpen,
+      overlays: { gasPlants: false, groundwater: false },
+      sizeMetric: "icon",
+      statusCycle: true,
+      showLegend: true,
+    },
+    outroFaq: {
       camera: GERMANY_CAMERA,
       layerOpacity: 0.85,
       legendOverride: baseOpen,
