@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Heiße Luft Rechenzentren-Karte</title>
+    <meta
+      name="description"
+      content="Karte geplanter und im Bau befindlicher Rechenzentren in Deutschland"
+    />
+  </head>
+  <body>
+    <main id="main">
+      <div id="app" class="app-shell app-shell--booting non-interactive">
+        <div id="loader" class="loader">
+          <img class="loader__logo" alt="" width="832" height="520" />
+          <p class="loader__text">Karte wird geladen …</p>
+        </div>
+        <div id="map" style="display: none" aria-hidden="true" role="presentation"></div>
+        <div id="root"></div>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        var loader = document.getElementById("loader");
+        var map = document.getElementById("map");
+        if (loader) loader.style.display = "flex";
+        if (map) map.style.display = "none";
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

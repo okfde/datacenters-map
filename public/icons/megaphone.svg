@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Megafon">
+  <!-- Sound waves emanating from the horn opening -->
+  <g fill="none" stroke="#fd2c8d" stroke-width="3.2" stroke-linecap="round">
+    <path d="M46 21c4 6 4 16 0 22"/>
+    <path d="M52 15c6 9 6 25 0 34"/>
+  </g>
+  <!-- Horn cone (base color) -->
+  <path d="M9 26 40 13v38L9 38z" fill="#fd2c8d" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Front rim of the horn -->
+  <path d="M40 11h4v42h-4z" fill="#fd2c8d" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Mouthpiece cap -->
+  <rect x="4" y="27" width="7" height="10" rx="2" fill="#1a1a1a"/>
+  <!-- Handle -->
+  <path d="M22 42h9v7a4 4 0 0 1-4 4h-1a4 4 0 0 1-4-4z" fill="#1a1a1a"/>
+</svg>

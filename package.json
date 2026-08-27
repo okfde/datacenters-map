@@ -1,0 +1,26 @@
+{
+  "name": "datacenters-map",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "build:data": "tsx scripts/dc-api-to-geojson.ts"
+  },
+  "dependencies": {
+    "lm-dc-db-client": "^1.2.0",
+    "maplibre-gl": "^5.7.1",
+    "solid-js": "^1.9.10"
+  },
+  "devDependencies": {
+    "@types/geojson": "^7946.0.16",
+    "@types/node": "^22.15.0",
+    "tsx": "^4.19.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2",
+    "vite-plugin-solid": "^2.11.10"
+  }
+}
