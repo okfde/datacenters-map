@@ -8,7 +8,6 @@ import {
   STATUS_LEGEND_ICONS,
 } from "../map/constants";
 import {
-  ALL_STATUS,
   type DataCenterFeature,
   type DcOperationalStatus,
 } from "../types/data";
@@ -27,6 +26,7 @@ type LegendProps = {
   filtersDisabled?: boolean;
   highlightSearch?: boolean;
   storySpotlight?: boolean;
+  statuses: DcOperationalStatus[];
   enabledStatus: Record<DcOperationalStatus, boolean>;
   onToggleStatus: (s: DcOperationalStatus) => void;
   sizeMetric: SizeMetric;
@@ -99,7 +99,7 @@ export const Legend: Component<LegendProps> = (props) => {
           <div class="legend__section" role="group" aria-label="Status">
             <h3 class="legend__section-title">Status</h3>
             <ul class="legend__list">
-              <For each={ALL_STATUS}>
+              <For each={props.statuses}>
                 {(s) => (
                   <li class="legend__row">
                     <button

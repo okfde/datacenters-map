@@ -10,6 +10,7 @@ import {
 } from "../scenes/registry";
 import {
   ALL_STATUS,
+  collectPresentStatuses,
   type DataCenterCollection,
   type DcOperationalStatus,
   type MapSelectableFeature,
@@ -41,6 +42,7 @@ export type StoryPlaybackDeps = {
 
 export function createStoryPlayback(deps: StoryPlaybackDeps) {
   let statusCycleTimer: ReturnType<typeof setInterval> | null = null;
+  const presentStatuses = collectPresentStatuses(deps.data);
 
   function clearStatusCycle(): void {
     if (statusCycleTimer != null) {
@@ -51,20 +53,21 @@ export function createStoryPlayback(deps: StoryPlaybackDeps) {
 
   function startStatusCycle(baseOverride: Partial<LegendFilter> | null): void {
     clearStatusCycle();
+    const cycleStatuses =
+      presentStatuses.length > 0 ? presentStatuses : ALL_STATUS;
     if (prefersReducedMotion()) {
       deps.setStoryLegendOverride({
         ...baseOverride,
-        enabledStatus: Object.fromEntries(ALL_STATUS.map((s) => [s, true])) as Record<
-          DcOperationalStatus,
-          boolean
-        >,
+        enabledStatus: Object.fromEntries(
+          ALL_STATUS.map((s) => [s, cycleStatuses.includes(s)]),
+        ) as Record<DcOperationalStatus, boolean>,
       });
       return;
     }
 
     let index = 0;
     const tick = (): void => {
-      const status = ALL_STATUS[index % ALL_STATUS.length];
+      const status = cycleStatuses[index % cycleStatuses.length];
       const enabledStatus = Object.fromEntries(
         ALL_STATUS.map((s) => [s, s === status]),
       ) as Record<DcOperationalStatus, boolean>;

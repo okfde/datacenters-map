@@ -66,7 +66,7 @@ const TEXT: Partial<Record<SceneId, StoryTextEntry>> = {
   },
   waterBaruth: {
     title: "Wasserkonflikte",
-    body: "Die Gemeinde Baruth in Brandenburg liegt in einem Landkreis mit akutem und strukturellem Grundwasserstress. Dort hat sich der RedBull Konzern einen großen Teil des Grundwassers gesichert und zusätzlich möchte Amazon dort ein großes Rechenzentrum bauen.",
+    body: "Die Gemeinde Baruth in Brandenburg liegt in einem Landkreis mit akutem und strukturellem Grundwasserstress. Dort hat sich der RedBull-Konzern einen großen Teil des Grundwassers gesichert und zusätzlich möchte Amazon dort ein großes Rechenzentrum bauen.",
   },
   bigtech: {
     title: "BigTech",

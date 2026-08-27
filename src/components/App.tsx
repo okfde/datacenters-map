@@ -28,6 +28,7 @@ import { cursorHitLayers, pickFeatureAtPoint } from "../map/mapSelection";
 import { waitForMapIdle } from "../map/setupMap";
 import {
   ALL_STATUS,
+  collectPresentStatuses,
   datacentersAtSameLocation,
   gasPlantsAtSameLocation,
   isGasPlantFeature,
@@ -73,6 +74,7 @@ export const App: Component<AppProps> = (props) => {
   const initial = parseUrlState();
   const sceneRegistry = buildSceneRegistry(props.data);
   const defaults = buildDefaultLegendFilter(props.data);
+  const presentStatuses = collectPresentStatuses(props.data);
 
   const initialScene: SceneId =
     props.startMode === "explore"
@@ -369,17 +371,18 @@ export const App: Component<AppProps> = (props) => {
         filtersDisabled={!mapInteractive()}
         highlightSearch={highlightSearch()}
         storySpotlight={showStoryLegend()}
+        statuses={presentStatuses}
         enabledStatus={displayStatus()}
         onToggleStatus={(s) =>
           setEnabledStatus((cur) => {
             const next = { ...cur, [s]: !cur[s] };
-            const anyOn = Object.values(next).some(Boolean);
+            const anyOn = presentStatuses.some((k) => next[k]);
             return anyOn
               ? next
-              : (Object.fromEntries(ALL_STATUS.map((k) => [k, true])) as Record<
-                  DcOperationalStatus,
-                  boolean
-                >);
+              : {
+                  ...cur,
+                  ...Object.fromEntries(presentStatuses.map((k) => [k, true])),
+                };
           })
         }
         sizeMetric={sizeMetric()}

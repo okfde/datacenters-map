@@ -41,6 +41,20 @@ export type DataCenterCollection = {
   features: DataCenterFeature[];
 };
 
+/** Statuses that appear in the collection */
+export function collectPresentStatuses(
+  data: DataCenterCollection,
+): DcOperationalStatus[] {
+  const present = new Set<DcOperationalStatus>();
+  for (const f of data.features) {
+    const raw = f.properties.operational_status?.trim();
+    const status = (raw || "unknown") as DcOperationalStatus;
+    if ((ALL_STATUS as string[]).includes(status)) present.add(status);
+    else present.add("unknown");
+  }
+  return ALL_STATUS.filter((s) => present.has(s));
+}
+
 export type GasPlantStatus =
   | "exploration"
   | "preparation"
