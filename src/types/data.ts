@@ -114,6 +114,26 @@ export function datacentersAtSameLocation(
   return featuresAtSameLocation(collection, feature);
 }
 
+export function featureMatchesSearchQuery(
+  feature: DataCenterFeature,
+  query: string,
+): boolean {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  const p = feature.properties;
+  const hay = [
+    p.name,
+    p.source_attributes?.operator_name,
+    p.source_attributes?.owner_name,
+    p.source_attributes?.guessed_owner_or_investor,
+    p.source_attributes?.city,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return hay.includes(q);
+}
+
 export function gasPlantsAtSameLocation(
   collection: GasPlantCollection | null | undefined,
   feature: GasPlantFeature,

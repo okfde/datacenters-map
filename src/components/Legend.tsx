@@ -35,6 +35,7 @@ type LegendProps = {
   onSearch: (q: string) => void;
   searchResults: DataCenterFeature[];
   onSelectResult: (f: DataCenterFeature) => void;
+  onPreviewResult?: (f: DataCenterFeature | null) => void;
   gasPlantsVisible: boolean;
   onToggleGasPlants: () => void;
   groundwaterVisible: boolean;
@@ -52,6 +53,7 @@ export const Legend: Component<LegendProps> = (props) => {
 
   function clearSearch(): void {
     props.onSearch("");
+    props.onPreviewResult?.(null);
   }
 
   function onToggleClick(): void {
@@ -320,6 +322,13 @@ export const Legend: Component<LegendProps> = (props) => {
               class="legend__results"
               role="listbox"
               aria-label="Suchergebnisse"
+              onMouseLeave={() => props.onPreviewResult?.(null)}
+              onFocusOut={(e) => {
+                const next = e.relatedTarget as Node | null;
+                if (!e.currentTarget.contains(next)) {
+                  props.onPreviewResult?.(null);
+                }
+              }}
             >
               <For each={props.searchResults}>
                 {(f) => (
@@ -328,6 +337,8 @@ export const Legend: Component<LegendProps> = (props) => {
                       type="button"
                       class="legend__result"
                       role="option"
+                      onMouseEnter={() => props.onPreviewResult?.(f)}
+                      onFocus={() => props.onPreviewResult?.(f)}
                       onClick={() => props.onSelectResult(f)}
                     >
                       {f.properties.name}

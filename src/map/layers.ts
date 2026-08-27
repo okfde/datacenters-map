@@ -9,6 +9,7 @@ export {
 export {
   addDataCentersToMap,
   expandClusterAtPoint,
+  featureMatchesFilter,
   hitLayersForMode,
   setDataCentersFilter,
   setLayerOpacity,

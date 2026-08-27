@@ -1,9 +1,10 @@
 import type maplibregl from "maplibre-gl";
 
-import type {
-  DataCenterCollection,
-  DataCenterFeature,
-  DcOperationalStatus,
+import {
+  featureMatchesSearchQuery,
+  type DataCenterCollection,
+  type DataCenterFeature,
+  type DcOperationalStatus,
 } from "../types/data";
 import type { SizeMetric } from "../url/params";
 import {
@@ -530,13 +531,15 @@ export type LegendFilter = {
   enabledOwnerCountries?: Record<string, boolean>;
   protestOnly?: boolean;
   minPowerKw?: number | null;
+  /** When set, only features matching this search query are shown. */
+  searchQuery?: string | null;
 };
 
 function coalesceKey(value: string | null | undefined): string {
   return value && value.trim() !== "" ? value : NULL_FILTER_VALUE;
 }
 
-function featureMatchesFilter(
+export function featureMatchesFilter(
   f: DataCenterFeature,
   filter: LegendFilter,
 ): boolean {
@@ -559,6 +562,9 @@ function featureMatchesFilter(
   if (filter.protestOnly && !p.has_protest) return false;
   if (filter.minPowerKw != null && filter.minPowerKw > 0) {
     if ((p.size_power_kw ?? 0) < filter.minPowerKw) return false;
+  }
+  if (filter.searchQuery?.trim()) {
+    if (!featureMatchesSearchQuery(f, filter.searchQuery)) return false;
   }
   return true;
 }

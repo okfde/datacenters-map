@@ -15,6 +15,7 @@ import { StoryOverlay } from "./StoryOverlay";
 import {
   addDataCentersToMap,
   addOverlayLayers,
+  featureMatchesFilter,
   setDataCentersFilter,
   setLayerOpacity,
   setOverlayVisibility,
@@ -24,6 +25,7 @@ import {
   type LegendFilter,
   type OverlayVisibility,
 } from "../map/layers";
+import { applyCamera, GERMANY_CAMERA } from "../map/mapActions";
 import { cursorHitLayers, pickFeatureAtPoint } from "../map/mapSelection";
 import { waitForMapIdle } from "../map/setupMap";
 import {
@@ -98,6 +100,7 @@ export const App: Component<AppProps> = (props) => {
   const [sizeMetric, setSizeMetricState] = createSignal(initial.view);
   const [searchQ, setSearchQ] = createSignal(initial.q);
   const [highlightSearch, setHighlightSearch] = createSignal(false);
+  const [previewIds, setPreviewIds] = createSignal<string[]>([]);
   const [showStoryLegend, setShowStoryLegend] = createSignal(false);
   const [gasPlantsVisible, setGasPlantsVisible] = createSignal(false);
   const [gasPlantsData, setGasPlantsData] = createSignal<GasPlantCollection | null>(
@@ -127,6 +130,7 @@ export const App: Component<AppProps> = (props) => {
   });
 
   function userLegendFilter(): LegendFilter {
+    const q = searchQ().trim();
     return {
       enabledStatus: enabledStatus(),
       enabledTypes: defaults.enabledTypes,
@@ -134,6 +138,7 @@ export const App: Component<AppProps> = (props) => {
       enabledOwnerCountries: defaults.enabledOwnerCountries,
       protestOnly: protestOnly(),
       minPowerKw: null,
+      searchQuery: q || null,
     };
   }
 
@@ -299,9 +304,10 @@ export const App: Component<AppProps> = (props) => {
   });
 
   createEffect(() => {
-    const ids = highlightIds();
+    const preview = previewIds();
+    const ids = preview.length ? preview : highlightIds();
     const sel = selected();
-    if (sel && isGasPlantFeature(sel)) {
+    if (sel && isGasPlantFeature(sel) && !preview.length) {
       setSelectedDataCenterHighlight(props.map, null);
       setSelectedGasPlantHighlight(props.map, ids.length ? ids : null);
     } else {
@@ -327,24 +333,10 @@ export const App: Component<AppProps> = (props) => {
   });
 
   const filteredList = createMemo(() => {
-    const q = searchQ().trim().toLowerCase();
+    const q = searchQ().trim();
     if (!q) return [] as DataCenterFeature[];
-    return props.data.features
-      .filter((f) => {
-        const p = f.properties;
-        const hay = [
-          p.name,
-          p.source_attributes?.operator_name,
-          p.source_attributes?.owner_name,
-          p.source_attributes?.guessed_owner_or_investor,
-          p.source_attributes?.city,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-        return hay.includes(q);
-      })
-      .slice(0, 12);
+    const legend = currentLegend();
+    return props.data.features.filter((f) => featureMatchesFilter(f, legend));
   });
 
   const coLocatedDataCenters = createMemo(() => {
@@ -388,14 +380,24 @@ export const App: Component<AppProps> = (props) => {
         sizeMetric={sizeMetric()}
         onSizeMetric={setSizeMetricState}
         searchQ={searchQ()}
-        onSearch={setSearchQ}
+        onSearch={(q) => {
+          const wasEmpty = !searchQ().trim();
+          setSearchQ(q);
+          setPreviewIds([]);
+          if (wasEmpty && q.trim()) {
+            applyCamera(props.map, GERMANY_CAMERA);
+          }
+        }}
         searchResults={filteredList()}
+        onPreviewResult={(f) => {
+          setPreviewIds(f ? [f.properties.id] : []);
+        }}
         onSelectResult={(f) => {
+          setPreviewIds([]);
           setSelected(f);
           setHighlightIds(
             datacentersAtSameLocation(props.data, f).map((x) => x.properties.id),
           );
-          setSearchQ("");
           writeUrlState({ feature: f.properties.id });
           props.map.flyTo({
             center: f.geometry.coordinates,
