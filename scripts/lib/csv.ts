@@ -20,3 +20,8 @@ export function toCsv(
 
 // Excel needs a UTF-8 BOM for German CSV.
 export const UTF8_BOM = "\uFEFF";
+
+/** One preamble row (column A) with line breaks inside a quoted cell */
+export function formatCsvLicensePreamble(lines: readonly string[]): string {
+  return `${escapeCsvCell(lines.join("\n"))}\n\n`;
+}

@@ -1,6 +1,32 @@
 import type { DataCenter } from "lm-dc-db-client";
 
-import { toCsv, UTF8_BOM } from "./lib/csv.js";
+import { formatCsvLicensePreamble, toCsv, UTF8_BOM } from "./lib/csv.js";
+
+const RAW_DATA_CSV_LICENSE_COMMENT = formatCsvLicensePreamble([
+  "BY USING THIS DATA YOU AGREE TO OUR LICENSE TERMS.",
+  "",
+  "This data is licensed as 'CC BY-NC-SA 4.0' https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "",
+  "You are free to:",
+  "* Share — copy and redistribute the material in any medium or format",
+  "* Adapt — remix, transform, and build upon the material",
+  "* The licensor cannot revoke these freedoms as long as you follow the license terms.",
+  "",
+  "Under the following terms:",
+  "",
+  "* Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.",
+  "* NonCommercial — You may not use the material for commercial purposes.",
+  "* ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.",
+  "* No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.",
+  "",
+  "Attribution: Heisseluft.org - Tiziana von Witzleben (Heisse-Luft-Kollektiv), Joschi Wolf (Frag den Staat), Max Schulze (Leitmotiv)",
+  "",
+  "Include a link to the map: heisseluft.org",
+  "",
+  "",
+  "If you would like to request the data set with estimations on electricity, emissions and other values that have not been published by the providers, you can do so through this form:",
+  "https://dcdb.leitmotiv.digital/request-data",
+]);
 
 const RAW_DATA_CSV_HEADERS = [
   "Name des RZ (Recherche)",
@@ -74,5 +100,5 @@ export function buildRawDataCsv(dcs: DataCenter[]): string {
     (a.data_center_name ?? "").localeCompare(b.data_center_name ?? "", "de"),
   );
   const rows = sorted.map(dataCenterToCsvRow);
-  return UTF8_BOM + toCsv(RAW_DATA_CSV_HEADERS, rows);
+  return UTF8_BOM + RAW_DATA_CSV_LICENSE_COMMENT + toCsv(RAW_DATA_CSV_HEADERS, rows);
 }

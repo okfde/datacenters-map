@@ -1,4 +1,28 @@
-﻿Name des RZ (Recherche);Betreiber (Recherche);Eigentümer (Recherche);Sitz des Eigentümers (Recherche);Art des Eigentümers (Recherche);Art des RZ (Expertenmeinung);Status (Recherche);Baustatus (Recherche);Region (Recherche);Metro region (Recherche);Stadt (Recherche);Postleitzahl (Recherche);Latitude;Longitude;Gesamtfläche Gebäude (m²) (Recherche);Fläche für IT (m²) (Recherche);Netzanschluss (kW) (Recherche);Stromkapazität für IT (kW) (Recherche);Geplante Inbetriebnahme (Recherche);Verifizierte Quelle 1;Verifizierte Quelle 2;Verifizierte Quelle 3;Verifizierte Quelle 4;Verifizierte Quelle 5;Verifizierte Quelle 6
+﻿"BY USING THIS DATA YOU AGREE TO OUR LICENSE TERMS.
+
+This data is licensed as 'CC BY-NC-SA 4.0' https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+You are free to:
+* Share — copy and redistribute the material in any medium or format
+* Adapt — remix, transform, and build upon the material
+* The licensor cannot revoke these freedoms as long as you follow the license terms.
+
+Under the following terms:
+
+* Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+* NonCommercial — You may not use the material for commercial purposes.
+* ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+* No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+
+Attribution: Heisseluft.org - Tiziana von Witzleben (Heisse-Luft-Kollektiv), Joschi Wolf (Frag den Staat), Max Schulze (Leitmotiv)
+
+Include a link to the map: heisseluft.org
+
+
+If you would like to request the data set with estimations on electricity, emissions and other values that have not been published by the providers, you can do so through this form:
+https://dcdb.leitmotiv.digital/request-data"
+
+Name des RZ (Recherche);Betreiber (Recherche);Eigentümer (Recherche);Sitz des Eigentümers (Recherche);Art des Eigentümers (Recherche);Art des RZ (Expertenmeinung);Status (Recherche);Baustatus (Recherche);Region (Recherche);Metro region (Recherche);Stadt (Recherche);Postleitzahl (Recherche);Latitude;Longitude;Gesamtfläche Gebäude (m²) (Recherche);Fläche für IT (m²) (Recherche);Netzanschluss (kW) (Recherche);Stromkapazität für IT (kW) (Recherche);Geplante Inbetriebnahme (Recherche);Verifizierte Quelle 1;Verifizierte Quelle 2;Verifizierte Quelle 3;Verifizierte Quelle 4;Verifizierte Quelle 5;Verifizierte Quelle 6
 AI Factory Amberg - Phase 1;Polarise Holding GmbH;SWI Capital Holding Ltd.;Germany;Investor;Hyperscale;under_construction;under_construction;Bayern;München;Amberg (Wertachtal);86854;48.0869;10.695;;;30000;;2027-01-01;https://press.siemens.com/de/de/pressemitteilung/siemens-errichtet-digitale-zukunftsfabrik-amberg;https://www.datacenter-insider.de/polarise-baut-ai-factory-im-unterallgaeu-a-37c7798a876ee7946b94837764285f64/;https://www.kreisbote.de/lokales/allgaeu/in-unterallgaeuer-gemeinde-amberg-soll-ki-rechenzentrum-mit-enormer-kapazitaet-entstehen-94216828.html;https://www.onvista.de/news/2026/03-10-startup-polarise-plant-weiteres-milliardenschweres-ki-rechenzentrum-in-bayern-0-20-26487926;;
 AI Factory Amberg - Phase 2;Polarise Holding GmbH;SWI Capital Holding Ltd.;Germany;Investor;Hyperscale;planned;planning;Bayern;München;Amberg (Wertachtal);86854;48.0869;10.695;;;90000;;2027-01-01;https://press.siemens.com/de/de/pressemitteilung/siemens-errichtet-digitale-zukunftsfabrik-amberg;https://www.datacenter-insider.de/polarise-baut-ai-factory-im-unterallgaeu-a-37c7798a876ee7946b94837764285f64/;https://www.kreisbote.de/lokales/allgaeu/in-unterallgaeuer-gemeinde-amberg-soll-ki-rechenzentrum-mit-enormer-kapazitaet-entstehen-94216828.html;https://www.onvista.de/news/2026/03-10-startup-polarise-plant-weiteres-milliardenschweres-ki-rechenzentrum-in-bayern-0-20-26487926;;
 AnoMed;Universität Lübeck;Universität Lübeck;Germany;University;University;under_construction;under_construction;Schleswig-Holstein;Lübeck;Lübeck;23562;53.8343287;10.70358696;400;;;;2026-01-01;https://www.datacenter-insider.de/luebeck-plant-ki-rechenzentrum-fuer-medizin-und-forschung-a-a04fdf8dbaa0b154e05dca7318427110/;;;;;
