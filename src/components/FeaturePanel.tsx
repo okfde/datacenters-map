@@ -31,6 +31,22 @@ const AttrRow: Component<{ attrKey: string; value: string }> = (props) => (
   </div>
 );
 
+const SourceLinksList: Component<{
+  items: ReturnType<typeof parseSources>;
+}> = (props) => (
+  <ul class="feature-panel__sources">
+    <For each={props.items}>
+      {(s) => (
+        <li>
+          <a href={s.url} target="_blank" rel="noopener noreferrer">
+            {s.label}
+          </a>
+        </li>
+      )}
+    </For>
+  </ul>
+);
+
 function metaParts(
   status: string | null | undefined,
   type: string | null | undefined,
@@ -146,6 +162,9 @@ const DataCenterDetails: Component<{ feature: DataCenterFeature }> = (props) => 
   const attrs = () => p().source_attributes ?? {};
   const sources = () => parseSources(attrs().sources);
   const protestSources = () => parseSources(attrs().protest_sources);
+  const hasSources = () => sources().length > 0;
+  const hasProtestSources = () => protestSources().length > 0;
+  const hasBothSourceTypes = () => hasSources() && hasProtestSources();
   const groupHeadingId = (groupId: string) =>
     `attr-group-${p().id}-${groupId}`;
   const groups = () =>
@@ -181,63 +200,50 @@ const DataCenterDetails: Component<{ feature: DataCenterFeature }> = (props) => 
             </section>
           )}
         </For>
-        <Show when={sources().length > 0 || protestSources().length > 0}>
+        <Show when={hasSources() || hasProtestSources()}>
           <section
             class="feature-panel__attr-group feature-panel__attr-group--sources"
-            aria-labelledby={groupHeadingId("sources")}
+            aria-labelledby={
+              hasBothSourceTypes()
+                ? groupHeadingId("sources-data")
+                : groupHeadingId("sources")
+            }
           >
-            <h4
-              class="feature-panel__attr-group-title"
-              id={groupHeadingId("sources")}
+            <Show when={!hasBothSourceTypes()}>
+              <h4
+                class="feature-panel__attr-group-title"
+                id={groupHeadingId("sources")}
+              >
+                {hasProtestSources()
+                  ? fieldLabelDe("protest_sources")
+                  : fieldLabelDe("sources")}
+              </h4>
+            </Show>
+            <Show
+              when={hasBothSourceTypes()}
+              fallback={
+                <SourceLinksList
+                  items={hasProtestSources() ? protestSources() : sources()}
+                />
+              }
             >
-              Quellen
-            </h4>
-            <dl class="feature-panel__attrs">
-              <Show when={sources().length > 0}>
+              <dl class="feature-panel__attrs">
                 <div class="feature-panel__attr">
-                  <dt>{fieldLabelDe("sources")}</dt>
+                  <dt id={groupHeadingId("sources-data")}>
+                    {fieldLabelDe("sources")}
+                  </dt>
                   <dd>
-                    <ul class="feature-panel__sources">
-                      <For each={sources()}>
-                        {(s) => (
-                          <li>
-                            <a
-                              href={s.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {s.label}
-                            </a>
-                          </li>
-                        )}
-                      </For>
-                    </ul>
+                    <SourceLinksList items={sources()} />
                   </dd>
                 </div>
-              </Show>
-              <Show when={protestSources().length > 0}>
                 <div class="feature-panel__attr feature-panel__attr--protest">
                   <dt>{fieldLabelDe("protest_sources")}</dt>
                   <dd>
-                    <ul class="feature-panel__sources">
-                      <For each={protestSources()}>
-                        {(s) => (
-                          <li>
-                            <a
-                              href={s.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {s.label}
-                            </a>
-                          </li>
-                        )}
-                      </For>
-                    </ul>
+                    <SourceLinksList items={protestSources()} />
                   </dd>
                 </div>
-              </Show>
-            </dl>
+              </dl>
+            </Show>
           </section>
         </Show>
       </div>
