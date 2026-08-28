@@ -36,7 +36,7 @@ type Props = {
   canGoPrev: boolean;
 };
 
-const FAQ_HREF = "https://fragdenstaat.de/aktionen/heisse-luft/faq/";
+const FAQ_HREF = "fragdenstaat.de/aktionen/heisse-luft/heisseluft-faq-und-methodik/";
 
 const TEXT: Partial<Record<SceneId, StoryTextEntry>> = {
   intro: {
