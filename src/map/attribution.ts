@@ -30,7 +30,7 @@ function buildCustomAttribution(fetchedAt?: string): string {
   }
 
   parts.push(
-    `Datenquelle: ${linkHtml(ATTRIBUTION_LINKS.leitmotiv, "Leitmotiv")}`,
+    `Datenquelle: Tiziana von Witzleben, ${linkHtml(ATTRIBUTION_LINKS.leitmotiv, "Leitmotiv")}`,
     `Kartengestaltung: ${linkHtml(ATTRIBUTION_LINKS.fragDenStaat, "FragDenStaat")}`,
     `Geodaten: ${linkHtml(ATTRIBUTION_LINKS.bkg, "Geodatenzentrum")} © GeoBasis-DE / BKG 2018 (VG250 31.12., Daten verändert)`,
     BASEMAP_ATTRIBUTION,
