@@ -42,6 +42,7 @@ const ALL_STATUS_ON: Record<DcOperationalStatus, boolean> = {
   under_construction: true,
   operational: true,
   paused: true,
+  cancelled: true,
   unknown: true,
 };
 

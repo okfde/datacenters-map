@@ -25,6 +25,7 @@ export const RACK_ICON_OUTLINE_SUFFIX = "-gw";
 const RACK_ICON_FILES: Record<string, string> = {
   rack: "rack.svg",
   "rack-paused": "rack-paused.svg",
+  "rack-cancelled": "rack-cancelled.svg",
   "rack-unknown": "rack-unknown.svg",
   "rack-planned": "rack-planned.svg",
   "rack-build-1": "rack-build-1.svg",

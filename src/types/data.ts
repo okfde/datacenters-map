@@ -3,6 +3,7 @@ export type DcOperationalStatus =
   | "under_construction"
   | "planned"
   | "paused"
+  | "cancelled"
   | "unknown";
 
 export const ALL_STATUS: DcOperationalStatus[] = [
@@ -10,6 +11,7 @@ export const ALL_STATUS: DcOperationalStatus[] = [
   "under_construction",
   "operational",
   "paused",
+  "cancelled",
   "unknown",
 ];
 

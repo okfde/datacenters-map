@@ -29,6 +29,7 @@ export const OPERATIONAL_STATUS_LABEL_DE: Record<string, string> = {
   under_construction: "im Aufbau",
   planned: "geplant",
   paused: "pausiert",
+  cancelled: "abgebrochen",
   unknown: "unbekannt",
   Unknown: "unbekannt",
 };

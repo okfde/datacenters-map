@@ -235,6 +235,8 @@ function colorExpression(): maplibregl.ExpressionSpecification {
     STATUS_COLORS.operational,
     "paused",
     STATUS_COLORS.paused,
+    "cancelled",
+    STATUS_COLORS.cancelled,
     STATUS_COLORS.unknown,
   ];
 }
@@ -251,6 +253,8 @@ function rackIconExpression(
     icon("rack"),
     "paused",
     icon("rack-paused"),
+    "cancelled",
+    icon("rack-cancelled"),
     "planned",
     icon("rack-planned"),
     "under_construction",

@@ -17,6 +17,7 @@ export const STATUS_COLORS: Record<string, string> = {
   under_construction: "#f7da06",
   operational: "#fd2c8d",
   paused: "#c9b005",
+  cancelled: "#8a7a2a",
   unknown: "#9a9a9a",
 };
 
@@ -25,6 +26,7 @@ export const STATUS_LEGEND_ICONS: Record<string, string> = {
   under_construction: "rack-build-4.svg",
   operational: "rack.svg",
   paused: "rack-paused.svg",
+  cancelled: "rack-cancelled.svg",
   unknown: "rack-unknown.svg",
 };
 
