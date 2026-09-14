@@ -23,6 +23,8 @@ pnpm build:data   # → public/data/datacenters.geojson + datacenters.csv
 
 Exports records whose `data_source` is `Data Center Rebellion (Germany dataset)` and that have coordinates (active and dismissed). Operational sites additionally need a `commissioning_date` year ≥ 2026.
 
+A scheduled GitHub Actions workflow runs `pnpm build:data` daily (00:00 UTC). It commits and redeploys only when the GeoJSON/CSV content changed (ignoring `fetched_at`). Requires repository secrets `BASE_URL` and `API_KEY`.
+
 ## Dev / build
 
 ```bash

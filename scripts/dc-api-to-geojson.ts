@@ -295,6 +295,8 @@ async function main(): Promise<void> {
     includedDcs.push(dc);
   }
 
+  features.sort((a, b) => a.properties.id.localeCompare(b.properties.id));
+
   const fetchedAt = new Date().toISOString();
   const collection = {
     type: "FeatureCollection" as const,
