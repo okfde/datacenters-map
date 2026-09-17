@@ -1,6 +1,7 @@
 import type { DataCenter } from "lm-dc-db-client";
 
 import { formatCsvLicensePreamble, toCsv, UTF8_BOM } from "./lib/csv.js";
+import { hectaresOrNull, sqmToHectares } from "./mapping.js";
 
 const RAW_DATA_CSV_LICENSE_COMMENT = formatCsvLicensePreamble([
   "BY USING THIS DATA YOU AGREE TO OUR LICENSE TERMS.",
@@ -43,8 +44,9 @@ const RAW_DATA_CSV_HEADERS = [
   "Postleitzahl (Recherche)",
   "Latitude",
   "Longitude",
-  "Gesamtfläche Gebäude (m²) (Recherche)",
-  "Fläche für IT (m²) (Recherche)",
+  "Gesamtfläche Gebäude (ha) (Recherche)",
+  "Grundstücksfläche (ha) (Recherche)",
+  "Fläche für IT (ha) (Recherche)",
   "Netzanschluss (kW) (Recherche)",
   "Stromkapazität für IT (kW) (Recherche)",
   "Geplante Inbetriebnahme (Recherche)",
@@ -86,8 +88,9 @@ function dataCenterToCsvRow(
     cell(dc.postal_code),
     cell(dc.latitude),
     cell(dc.longitude),
-    cell(dc.floor_space_sqm),
-    cell(dc.it_floor_space_sqm),
+    cell(sqmToHectares(dc.floor_space_sqm)),
+    cell(hectaresOrNull(dc.site_area_hectares)),
+    cell(sqmToHectares(dc.it_floor_space_sqm)),
     cell(dc.total_power_capacity_kw),
     cell(dc.it_power_capacity_kw),
     cell(dc.planned_commission_date),

@@ -22,7 +22,8 @@ export type DataCenterProperties = {
   construction_status: string | null;
   data_center_type: string | null;
   has_protest: boolean;
-  size_floor_sqm: number | null;
+  size_floor_ha?: number | null;
+  size_site_ha?: number | null;
   size_power_kw: number | null;
   owner_type: string | null;
   owner_country: string | null;

@@ -26,6 +26,8 @@ import {
   MIN_OPERATIONAL_COMMISSIONING_YEAR,
   ownerCountryFlag,
   shouldIncludeByOperationalCommissioning,
+  hectaresOrNull,
+  sqmToHectares,
 } from "./mapping.js";
 import { buildProtestSourcesFromTags, serializeProtestSources } from "./lib/protest-sources.js";
 import { buildRawDataCsv } from "./raw-data-csv.js";
@@ -40,7 +42,8 @@ type GeoFeature = {
     construction_status: string | null;
     data_center_type: string | null;
     has_protest: boolean;
-    size_floor_sqm: number | null;
+    size_floor_ha: number | null;
+    size_site_ha: number | null;
     size_power_kw: number | null;
     owner_type: string | null;
     owner_country: string | null;
@@ -175,13 +178,15 @@ function buildSourceAttributes(
   put("owner_type", dc.owner_type);
   put("owner_country", dc.owner_country);
 
-  const floorMeasured = num(dc.floor_space_sqm);
-  const floorEstimated = num(est?.estimated_floor_space_sqm);
+  const floorMeasured = sqmToHectares(dc.floor_space_sqm);
+  const floorEstimated = sqmToHectares(est?.estimated_floor_space_sqm);
   if (floorMeasured != null) {
-    put("floor_space_sqm", floorMeasured);
+    put("floor_space_ha", floorMeasured);
   } else if (floorEstimated != null) {
-    put("estimated_floor_space_sqm", floorEstimated);
+    put("estimated_floor_space_ha", floorEstimated);
   }
+
+  put("site_area_ha", hectaresOrNull(dc.site_area_hectares));
 
   const powerMeasured = num(dc.total_power_capacity_kw);
   const powerEstimated = num(est?.estimated_total_power_capacity_kw);
@@ -213,8 +218,11 @@ function toFeature(
 ): GeoFeature | null {
   if (!hasCoords(dc.latitude, dc.longitude)) return null;
 
-  const size_floor_sqm =
-    num(dc.floor_space_sqm) ?? num(est?.estimated_floor_space_sqm) ?? null;
+  const size_floor_ha =
+    sqmToHectares(dc.floor_space_sqm) ??
+    sqmToHectares(est?.estimated_floor_space_sqm) ??
+    null;
+  const size_site_ha = hectaresOrNull(dc.site_area_hectares);
   const size_power_kw =
     num(dc.total_power_capacity_kw) ??
     num(est?.estimated_total_power_capacity_kw) ??
@@ -236,7 +244,8 @@ function toFeature(
       construction_status: str(dc.construction_status),
       data_center_type: str(dc.data_center_type),
       has_protest: hasProtest(dc.tags),
-      size_floor_sqm,
+      size_floor_ha,
+      size_site_ha,
       size_power_kw,
       owner_type,
       owner_country,

@@ -2,7 +2,7 @@ import type { StorySceneId } from "../scenes/ids";
 
 export type StartMode = "cover" | "story" | "explore";
 
-export type SizeMetric = "floor" | "power" | "icon";
+export type SizeMetric = "floor" | "site" | "power" | "icon";
 
 export type UrlState = {
   start: StartMode;
@@ -62,6 +62,7 @@ function parseProtest(raw: string | null): boolean | null {
 function parseView(raw: string | null): SizeMetric {
   const v = (raw ?? "").trim().toLowerCase();
   if (v === "power") return "power";
+  if (v === "site") return "site";
   if (v === "floor" || v === "area") return "floor";
   if (v === "icon" || v === "symbols" || v === "marker") return "icon";
   return "icon";

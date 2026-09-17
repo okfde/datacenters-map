@@ -170,7 +170,8 @@ const DataCenterDetails: Component<{ feature: DataCenterFeature }> = (props) => 
   const groups = () =>
     groupedAttrEntries(
       attrs(),
-      p().size_floor_sqm,
+      p().size_floor_ha,
+      p().size_site_ha,
       p().size_power_kw,
       p().operational_status,
     );

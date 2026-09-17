@@ -257,7 +257,20 @@ export const Legend: Component<LegendProps> = (props) => {
                   onClick={() => props.onSizeMetric("floor")}
                 >
                   <span class="legend__swatch legend__swatch--circle" />
-                  <span class="legend__label">Fläche (m²)</span>
+                  <span class="legend__label">Gebäudefläche (ha)</span>
+                </button>
+              </li>
+              <li class="legend__row">
+                <button
+                  type="button"
+                  class="legend__item legend__item--choice"
+                  classList={{ "legend__item--off": props.sizeMetric !== "site" }}
+                  aria-pressed={props.sizeMetric === "site"}
+                  disabled={props.filtersDisabled}
+                  onClick={() => props.onSizeMetric("site")}
+                >
+                  <span class="legend__swatch legend__swatch--circle" />
+                  <span class="legend__label">Grundstücksfläche (ha)</span>
                 </button>
               </li>
               <li class="legend__row">

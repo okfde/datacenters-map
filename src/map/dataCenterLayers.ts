@@ -162,12 +162,16 @@ export function setSelectedDataCenterHighlight(
   applyIconSizeHighlight(map, highlightedFeatureIds);
 }
 
-function sizeProperty(metric: "floor" | "power"): "size_floor_sqm" | "size_power_kw" {
-  return metric === "power" ? "size_power_kw" : "size_floor_sqm";
+function sizeProperty(
+  metric: Exclude<SizeMetric, "icon">,
+): "size_floor_ha" | "size_site_ha" | "size_power_kw" {
+  if (metric === "power") return "size_power_kw";
+  if (metric === "site") return "size_site_ha";
+  return "size_floor_ha";
 }
 
 function unknownSizeFilter(
-  metric: "floor" | "power",
+  metric: Exclude<SizeMetric, "icon">,
 ): maplibregl.FilterSpecification {
   return [
     "==",
@@ -176,7 +180,9 @@ function unknownSizeFilter(
   ] as maplibregl.FilterSpecification;
 }
 
-function sizeExpression(metric: "floor" | "power"): maplibregl.ExpressionSpecification {
+function sizeExpression(
+  metric: Exclude<SizeMetric, "icon">,
+): maplibregl.ExpressionSpecification {
   const prop = sizeProperty(metric);
   const knownRamp: maplibregl.ExpressionSpecification =
     metric === "power"
@@ -201,13 +207,13 @@ function sizeExpression(metric: "floor" | "power"): maplibregl.ExpressionSpecifi
           ["sqrt", ["get", prop]],
           0,
           5,
-          50,
+          0.5,
           10,
-          158,
+          1.6,
           20,
-          316,
+          3.2,
           36,
-          707,
+          7,
           58,
         ];
 
@@ -299,12 +305,14 @@ function applyDisplayMode(map: maplibregl.Map, metric: SizeMetric): void {
   setLayerVisible(map, DC_ICON_HIT_LAYER, iconMode);
   setLayerVisible(map, DC_ICON_PROTEST_LAYER, iconMode);
 
-  if (!iconMode && map.getLayer(DC_CIRCLES_LAYER)) {
+  if (metric === "icon") return;
+
+  if (map.getLayer(DC_CIRCLES_LAYER)) {
     const expr = sizeExpression(metric);
     map.setPaintProperty(DC_CIRCLES_LAYER, "circle-radius", expr);
     map.setPaintProperty(DC_HIT_LAYER, "circle-radius", ["max", 14, expr]);
   }
-  if (!iconMode && map.getLayer(DC_UNKNOWN_SIZE_LAYER)) {
+  if (map.getLayer(DC_UNKNOWN_SIZE_LAYER)) {
     map.setFilter(DC_UNKNOWN_SIZE_LAYER, unknownSizeFilter(metric));
   }
 }
@@ -326,9 +334,7 @@ export async function addDataCentersToMap(
     });
 
     const initialRadius: maplibregl.ExpressionSpecification | number =
-      metric === "icon"
-        ? 8
-        : sizeExpression(metric === "power" ? "power" : "floor");
+      metric === "icon" ? 8 : sizeExpression(metric);
 
     map.addLayer({
       id: DC_CIRCLES_LAYER,
@@ -352,9 +358,7 @@ export async function addDataCentersToMap(
         "circle-radius": [
           "max",
           14,
-          metric === "icon"
-            ? 14
-            : sizeExpression(metric === "power" ? "power" : "floor"),
+          metric === "icon" ? 14 : sizeExpression(metric),
         ],
         "circle-opacity": 0,
       },
@@ -367,7 +371,7 @@ export async function addDataCentersToMap(
       filter:
         metric === "icon"
           ? ["==", ["get", "id"], ""]
-          : unknownSizeFilter(metric === "power" ? "power" : "floor"),
+          : unknownSizeFilter(metric),
       layout: {
         "text-field": "?",
         "text-size": 11,

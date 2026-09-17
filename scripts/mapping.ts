@@ -2,6 +2,23 @@ export const MIN_OPERATIONAL_COMMISSIONING_YEAR = 2026;
 
 export const EXPORT_DATA_SOURCE = "Data Center Rebellion (Germany dataset)";
 
+/** Convert API floor areas (m²) to hectares for map/CSV export. */
+export const SQM_PER_HECTARE = 10_000;
+
+export function sqmToHectares(
+  sqm: number | null | undefined,
+): number | null {
+  if (typeof sqm !== "number" || !Number.isFinite(sqm)) return null;
+  return sqm / SQM_PER_HECTARE;
+}
+
+export function hectaresOrNull(
+  hectares: number | null | undefined,
+): number | null {
+  if (typeof hectares !== "number" || !Number.isFinite(hectares)) return null;
+  return hectares;
+}
+
 export function matchesExportDataSource(dc: {
   data_source: string | null | undefined;
 }): boolean {

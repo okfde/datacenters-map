@@ -14,8 +14,9 @@ export const FIELD_LABEL_DE: Record<string, string> = {
   planned_commission_date: "Geplante Inbetriebnahme",
   owner_type: "Art des Eigentümers (UBO)",
   owner_country: "Sitz des Eigentümers (UBO)",
-  floor_space_sqm: "Gesamtfläche Gebäude (m²)",
-  estimated_floor_space_sqm: "Geschätzte Gesamtfläche Gebäude (m²)",
+  floor_space_ha: "Gesamtfläche Gebäude (ha)",
+  estimated_floor_space_ha: "Geschätzte Gesamtfläche Gebäude (ha)",
+  site_area_ha: "Grundstücksfläche (ha)",
   total_power_capacity_kw: "Anschlussleistung (kW)",
   estimated_total_power_capacity_kw: "Geschätzte Anschlussleistung (kW)",
   intended_use: "Anwendung",
@@ -135,8 +136,9 @@ const ATTR_KEY_TO_GROUP: Record<string, AttrGroupId> = {
   data_center_type: "project",
   commissioning_date: "project",
   planned_commission_date: "project",
-  floor_space_sqm: "technical",
-  estimated_floor_space_sqm: "technical",
+  floor_space_ha: "technical",
+  estimated_floor_space_ha: "technical",
+  site_area_ha: "technical",
   total_power_capacity_kw: "technical",
   estimated_total_power_capacity_kw: "technical",
   intended_use: "technical",
@@ -160,8 +162,9 @@ const GROUP_KEY_ORDER: Record<AttrGroupId, readonly string[]> = {
     "planned_commission_date",
   ],
   technical: [
-    "floor_space_sqm",
-    "estimated_floor_space_sqm",
+    "floor_space_ha",
+    "estimated_floor_space_ha",
+    "site_area_ha",
     "total_power_capacity_kw",
     "estimated_total_power_capacity_kw",
     "intended_use",
@@ -201,7 +204,8 @@ function sortEntriesForGroup(
 
 function collectAttrEntries(
   attrs: Record<string, string>,
-  sizeFloorSqm: number | null | undefined,
+  sizeFloorHa: number | null | undefined,
+  sizeSiteHa: number | null | undefined,
   sizePowerKw: number | null | undefined,
   operationalStatus: string | null | undefined,
 ): AttrEntry[] {
@@ -215,7 +219,8 @@ function collectAttrEntries(
     if (key === "intended_use") {
       for (const entry of resolveFloorPowerEntries(
         attrs,
-        sizeFloorSqm,
+        sizeFloorHa,
+        sizeSiteHa,
         sizePowerKw,
       )) {
         out.push(entry);
@@ -246,13 +251,15 @@ function collectAttrEntries(
 
 export function groupedAttrEntries(
   attrs: Record<string, string>,
-  sizeFloorSqm: number | null | undefined,
+  sizeFloorHa: number | null | undefined,
+  sizeSiteHa: number | null | undefined,
   sizePowerKw: number | null | undefined,
   operationalStatus: string | null | undefined,
 ): AttrGroup[] {
   const flat = collectAttrEntries(
     attrs,
-    sizeFloorSqm,
+    sizeFloorHa,
+    sizeSiteHa,
     sizePowerKw,
     operationalStatus,
   );
@@ -272,8 +279,9 @@ export function groupedAttrEntries(
 }
 
 export const FLOOR_POWER_ATTR_KEYS = new Set([
-  "floor_space_sqm",
-  "estimated_floor_space_sqm",
+  "floor_space_ha",
+  "estimated_floor_space_ha",
+  "site_area_ha",
   "total_power_capacity_kw",
   "estimated_total_power_capacity_kw",
 ]);
@@ -282,6 +290,9 @@ export const FLOOR_POWER_ATTR_KEYS = new Set([
 export const HIDDEN_ATTR_KEYS = new Set([
   "operational_probability_percentage",
   "estimated_water_consumption_liters",
+  "floor_space_sqm",
+  "estimated_floor_space_sqm",
+  "site_area_sqm",
 ]);
 
 const UNKNOWN_ATTR_VALUE = "unbekannt";
@@ -296,8 +307,9 @@ export function normalizeUnknownDisplay(value: string): string {
 }
 
 const NUMERIC_ATTR_KEYS = new Set([
-  "floor_space_sqm",
-  "estimated_floor_space_sqm",
+  "floor_space_ha",
+  "estimated_floor_space_ha",
+  "site_area_ha",
   "total_power_capacity_kw",
   "estimated_total_power_capacity_kw",
   "estimated_total_energy_consumption_kwh",
@@ -321,16 +333,23 @@ export function isEmptyAttrDisplayValue(
 
 export function resolveFloorPowerEntries(
   attrs: Record<string, string>,
-  sizeFloorSqm: number | null | undefined,
+  sizeFloorHa: number | null | undefined,
+  sizeSiteHa: number | null | undefined,
   sizePowerKw: number | null | undefined,
 ): Array<[string, string]> {
-  const floor: [string, string] = !isEmptyAttrDisplayValue(attrs.floor_space_sqm)
-    ? ["floor_space_sqm", attrs.floor_space_sqm]
-    : !isEmptyAttrDisplayValue(attrs.estimated_floor_space_sqm)
-      ? ["estimated_floor_space_sqm", attrs.estimated_floor_space_sqm]
-      : sizeFloorSqm != null && Number.isFinite(sizeFloorSqm)
-        ? ["estimated_floor_space_sqm", String(sizeFloorSqm)]
-        : ["floor_space_sqm", UNKNOWN_ATTR_VALUE];
+  const floor: [string, string] = !isEmptyAttrDisplayValue(attrs.floor_space_ha)
+    ? ["floor_space_ha", attrs.floor_space_ha]
+    : !isEmptyAttrDisplayValue(attrs.estimated_floor_space_ha)
+      ? ["estimated_floor_space_ha", attrs.estimated_floor_space_ha]
+      : sizeFloorHa != null && Number.isFinite(sizeFloorHa)
+        ? ["estimated_floor_space_ha", String(sizeFloorHa)]
+        : ["floor_space_ha", UNKNOWN_ATTR_VALUE];
+
+  const site: [string, string] = !isEmptyAttrDisplayValue(attrs.site_area_ha)
+    ? ["site_area_ha", attrs.site_area_ha]
+    : sizeSiteHa != null && Number.isFinite(sizeSiteHa)
+      ? ["site_area_ha", String(sizeSiteHa)]
+      : ["site_area_ha", UNKNOWN_ATTR_VALUE];
 
   const power: [string, string] = !isEmptyAttrDisplayValue(
     attrs.total_power_capacity_kw,
@@ -345,7 +364,7 @@ export function resolveFloorPowerEntries(
         ? ["estimated_total_power_capacity_kw", String(sizePowerKw)]
         : ["total_power_capacity_kw", UNKNOWN_ATTR_VALUE];
 
-  return [floor, power];
+  return [floor, site, power];
 }
 
 export function fieldLabelDe(key: string): string {
