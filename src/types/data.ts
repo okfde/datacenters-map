@@ -130,6 +130,8 @@ export function featureMatchesSearchQuery(
     p.source_attributes?.owner_name,
     p.source_attributes?.guessed_owner_or_investor,
     p.source_attributes?.city,
+    p.source_attributes?.metro_region,
+    p.source_attributes?.postal_code,
   ]
     .filter(Boolean)
     .join(" ")
