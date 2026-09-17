@@ -1,15 +1,12 @@
 import type maplibregl from "maplibre-gl";
 
-const GERMAN_TEXT_FIELD: maplibregl.ExpressionSpecification = [
+const LOCAL_TEXT_FIELD: maplibregl.ExpressionSpecification = [
   "coalesce",
-  ["get", "name:de"],
-  ["get", "name:latin"],
   ["get", "name"],
+  ["get", "name:latin"],
 ];
 
-function textFieldUsesNameProperty(
-  textField: unknown,
-): boolean {
+function textFieldUsesNameProperty(textField: unknown): boolean {
   if (textField == null) return false;
   if (typeof textField === "string") {
     return textField.includes("name");
@@ -17,7 +14,8 @@ function textFieldUsesNameProperty(
   return JSON.stringify(textField).includes('"name');
 }
 
-export function applyGermanBasemapLabels(map: maplibregl.Map): void {
+/** Override English-first labels with local OSM names. */
+export function applyLocalBasemapLabels(map: maplibregl.Map): void {
   const layers = map.getStyle()?.layers;
   if (!layers) return;
 
@@ -26,9 +24,9 @@ export function applyGermanBasemapLabels(map: maplibregl.Map): void {
     const textField = layer.layout?.["text-field"];
     if (!textFieldUsesNameProperty(textField)) continue;
     try {
-      map.setLayoutProperty(layer.id, "text-field", GERMAN_TEXT_FIELD);
+      map.setLayoutProperty(layer.id, "text-field", LOCAL_TEXT_FIELD);
     } catch (err) {
-      console.warn(`Could not set German labels on layer ${layer.id}`, err);
+      console.warn(`Could not set local labels on layer ${layer.id}`, err);
     }
   }
 }

@@ -4,7 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { createAttributionControl } from "./attribution";
 import { DEFAULT_STYLE_URL, GERMANY_BOUNDS } from "./constants";
 import { addGermanyBorder } from "./germanyBorder";
-import { applyGermanBasemapLabels } from "./applyGermanBasemapLabels";
+import { applyLocalBasemapLabels } from "./applyLocalBasemapLabels";
 
 export type MapResources = {
   map: maplibregl.Map;
@@ -50,7 +50,7 @@ export function setupMap(container: HTMLElement): Promise<MapResources> {
   return new Promise((resolve, reject) => {
     map.once("error", (e) => reject(e.error ?? e));
     map.once("load", () => {
-      applyGermanBasemapLabels(map);
+      applyLocalBasemapLabels(map);
       addGermanyBorder(map);
       resolve({ map, navControl, attributionControl, hash });
     });
